@@ -1,0 +1,522 @@
+/* Mexican-themed color palette */
+:root {
+  --mexican-green: #006847;
+  --mexican-white: #FFFFFF;
+  --mexican-red: #CE1126;
+  --mexican-green-light: #00885a;
+  --mexican-red-light: #e63946;
+  --text-dark: #1a1a1a;
+  --border-color: #ddd;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, var(--mexican-white) 0%, #f5f5f5 100%);
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 50px;
+  padding: 30px 20px;
+  background: linear-gradient(135deg, var(--mexican-green) 0%, var(--mexican-green-light) 100%);
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 104, 71, 0.3);
+}
+
+.app-header h1 {
+  font-size: 42px;
+  color: var(--mexican-white);
+  margin-bottom: 15px;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.subtitle {
+  font-size: 22px;
+  color: var(--mexican-white);
+  opacity: 0.95;
+  margin-bottom: 20px;
+}
+
+.event-address {
+  margin-top: 25px;
+  padding-top: 25px;
+  border-top: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.address-label {
+  font-size: 20px;
+  color: var(--mexican-white);
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.address-link {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 22px;
+  color: var(--mexican-white);
+  text-decoration: none;
+  padding: 18px 30px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  border: 3px solid rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.address-link:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.8);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.address-link:active {
+  transform: translateY(-1px);
+}
+
+.address-text {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.address-hint {
+  font-size: 16px;
+  font-weight: 500;
+  opacity: 0.9;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.app-main {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.attendees-toggle-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.toggle-attendees-button {
+  background: linear-gradient(135deg, var(--mexican-green) 0%, var(--mexican-green-light) 100%);
+  color: var(--mexican-white);
+  font-size: 22px;
+  font-weight: 700;
+  padding: 18px 35px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 104, 71, 0.3);
+  align-self: center;
+  min-width: 250px;
+}
+
+.toggle-attendees-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 104, 71, 0.4);
+}
+
+.toggle-attendees-button:active {
+  transform: translateY(0);
+}
+
+.rsvp-form-section {
+  background: var(--mexican-white);
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: 3px solid var(--mexican-green);
+}
+
+.rsvp-form-section h2 {
+  font-size: 32px;
+  color: var(--mexican-green);
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.rsvp-form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-group label {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.name-input {
+  font-size: 20px;
+  padding: 18px 20px;
+  border: 3px solid var(--mexican-green);
+  border-radius: 8px;
+  outline: none;
+  transition: all 0.3s ease;
+  background: var(--mexican-white);
+  color: var(--text-dark);
+}
+
+.name-input:focus {
+  border-color: var(--mexican-red);
+  box-shadow: 0 0 0 4px rgba(206, 17, 38, 0.1);
+}
+
+.name-input::placeholder {
+  color: #999;
+  font-size: 18px;
+}
+
+.checkbox-group {
+  margin: 10px 0;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--text-dark);
+  padding: 15px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.checkbox-label:hover {
+  background-color: #f0f0f0;
+}
+
+.dish-checkbox {
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  accent-color: var(--mexican-green);
+  flex-shrink: 0;
+}
+
+.dish-name-input-wrapper {
+  margin-top: 12px;
+  margin-left: 43px;
+}
+
+.dishes-container {
+  margin-top: 12px;
+  margin-left: 43px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dish-input-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.dish-name-input {
+  font-size: 20px;
+  padding: 18px 20px;
+  border: 3px solid var(--mexican-green);
+  border-radius: 8px;
+  outline: none;
+  transition: all 0.3s ease;
+  background: var(--mexican-white);
+  color: var(--text-dark);
+  flex: 1;
+}
+
+.dish-name-input:focus {
+  border-color: var(--mexican-red);
+  box-shadow: 0 0 0 4px rgba(206, 17, 38, 0.1);
+}
+
+.dish-name-input::placeholder {
+  color: #999;
+  font-size: 18px;
+}
+
+.remove-dish-button {
+  background: var(--mexican-red);
+  color: var(--mexican-white);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.remove-dish-button:hover {
+  background: var(--mexican-red-light);
+  transform: scale(1.1);
+}
+
+.add-dish-button {
+  background: var(--mexican-green);
+  color: var(--mexican-white);
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  align-self: flex-start;
+}
+
+.add-dish-button:hover {
+  background: var(--mexican-green-light);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 104, 71, 0.3);
+}
+
+.error-message {
+  background-color: var(--mexican-red);
+  color: var(--mexican-white);
+  padding: 15px 20px;
+  border-radius: 8px;
+  font-size: 18px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.submit-button {
+  background: linear-gradient(135deg, var(--mexican-red) 0%, var(--mexican-red-light) 100%);
+  color: var(--mexican-white);
+  font-size: 24px;
+  font-weight: 700;
+  padding: 20px 40px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(206, 17, 38, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.submit-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(206, 17, 38, 0.4);
+}
+
+.submit-button:active {
+  transform: translateY(0);
+}
+
+.submit-button:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+  box-shadow: none;
+}
+
+.submit-button:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Attendee List Styles */
+.attendee-list-section {
+  background: var(--mexican-white);
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: 3px solid var(--mexican-red);
+}
+
+.attendee-list-section h2 {
+  font-size: 32px;
+  color: var(--mexican-red);
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.empty-state p {
+  font-size: 22px;
+  font-style: italic;
+}
+
+.attendee-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.attendee-card {
+  background: linear-gradient(135deg, #f8f8f8 0%, var(--mexican-white) 100%);
+  padding: 25px;
+  border-radius: 12px;
+  border: 2px solid var(--mexican-green);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.attendee-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 104, 71, 0.2);
+  border-color: var(--mexican-green-light);
+}
+
+.attendee-name {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--mexican-green);
+  margin-bottom: 12px;
+}
+
+.dish-status {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.dish-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dish-yes {
+  color: var(--mexican-green);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dish-yes::before {
+  content: "✓";
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--mexican-green);
+}
+
+.dishes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+  margin-left: 32px;
+}
+
+.dish-name {
+  color: var(--mexican-red);
+  font-size: 18px;
+  font-weight: 600;
+  font-style: italic;
+  padding: 8px 12px;
+  background: rgba(206, 17, 38, 0.1);
+  border-radius: 6px;
+  border-left: 3px solid var(--mexican-red);
+}
+
+.dish-no {
+  color: #666;
+}
+
+.white-elephant-status {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.white-elephant-yes {
+  color: var(--mexican-red);
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .app {
+    padding: 20px 15px;
+  }
+
+  .app-header h1 {
+    font-size: 32px;
+  }
+
+  .subtitle {
+    font-size: 18px;
+  }
+
+  .address-label {
+    font-size: 18px;
+  }
+
+  .address-link {
+    font-size: 18px;
+    padding: 10px 16px;
+  }
+
+  .rsvp-form-section,
+  .attendee-list-section {
+    padding: 25px 20px;
+  }
+
+  .rsvp-form-section h2,
+  .attendee-list-section h2 {
+    font-size: 26px;
+  }
+
+  .attendee-list {
+    grid-template-columns: 1fr;
+  }
+
+  .submit-button {
+    font-size: 20px;
+    padding: 18px 30px;
+  }
+}
+
