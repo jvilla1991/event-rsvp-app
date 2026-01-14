@@ -1,4 +1,60 @@
-function AttendeeList({ rsvps }) {
+import { useState, useEffect } from 'react'
+import { getEventRSVPs } from '../services/api'
+
+function AttendeeList({ eventId }) {
+  const [rsvps, setRsvps] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    const fetchRSVPs = async () => {
+      if (!eventId) {
+        setLoading(false)
+        return
+      }
+
+      try {
+        setLoading(true)
+        setError('')
+        const data = await getEventRSVPs(eventId)
+        setRsvps(data || [])
+      } catch (err) {
+        console.error('Error fetching RSVPs:', err)
+        setError('Failed to load attendees. Please try again later.')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchRSVPs()
+    
+    // Refresh RSVPs every 5 seconds to show new submissions
+    const interval = setInterval(fetchRSVPs, 5000)
+    return () => clearInterval(interval)
+  }, [eventId])
+
+  if (loading) {
+    return (
+      <section className="attendee-list-section">
+        <h2>Attendees</h2>
+        <div className="loading-state">
+          <p>Loading attendees...</p>
+        </div>
+      </section>
+    )
+  }
+
+  if (error) {
+    return (
+      <section className="attendee-list-section">
+        <h2>Attendees</h2>
+        <div className="error-state">
+          <p>{error}</p>
+        </div>
+      </section>
+    )
+  }
+
   if (rsvps.length === 0) {
     return (
       <section className="attendee-list-section">
@@ -21,7 +77,9 @@ function AttendeeList({ rsvps }) {
               {rsvp.bringingDish ? (
                 <div className="dish-info">
                   {(() => {
-                    const dishList = rsvp.dishes || (rsvp.dishName ? [rsvp.dishName] : [])
+                    const dishList = Array.isArray(rsvp.dishes) 
+                      ? rsvp.dishes 
+                      : (rsvp.dishes ? JSON.parse(rsvp.dishes) : [])
                     const dishCount = dishList.length
                     return (
                       <>
