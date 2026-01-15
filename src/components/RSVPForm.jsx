@@ -3,9 +3,7 @@ import { submitRSVP } from '../services/api'
 
 function RSVPForm({ eventId, onRSVPSuccess }) {
   const [name, setName] = useState('')
-  const [bringingDish, setBringingDish] = useState(false)
-  const [dishes, setDishes] = useState([''])
-  const [whiteElephant, setWhiteElephant] = useState(false)
+  const [willAttend, setWillAttend] = useState(true)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -20,16 +18,14 @@ function RSVPForm({ eventId, onRSVPSuccess }) {
       return
     }
 
-    if (bringingDish) {
-      const validDishes = dishes.filter(dish => dish.trim())
-      if (validDishes.length === 0) {
-        setError('Please enter at least one dish name')
-        return
-      }
-    }
-
     if (!eventId) {
-      setError('Event ID is missing')
+      setError('Event ID is missing. Please refresh the page and try again.')
+      return
+    }
+    
+    // Validate eventId is a valid number
+    if (isNaN(parseInt(eventId))) {
+      setError('Invalid event ID. Please select an event from the list.')
       return
     }
 
@@ -37,18 +33,14 @@ function RSVPForm({ eventId, onRSVPSuccess }) {
       setLoading(true)
       const rsvpData = {
         name: name.trim(),
-        bringingDish: bringingDish,
-        dishes: bringingDish ? dishes.filter(dish => dish.trim()) : [],
-        whiteElephant: whiteElephant
+        willAttend: willAttend
       }
 
       await submitRSVP(eventId, rsvpData)
       
       setSuccess(true)
       setName('')
-      setBringingDish(false)
-      setDishes([''])
-      setWhiteElephant(false)
+      setWillAttend(true)
       
       if (onRSVPSuccess) {
         onRSVPSuccess()
@@ -58,33 +50,13 @@ function RSVPForm({ eventId, onRSVPSuccess }) {
       setTimeout(() => setSuccess(false), 3000)
     } catch (err) {
       console.error('Error submitting RSVP:', err)
-      setError(err.response?.data?.message || 'Failed to submit RSVP. Please try again.')
+        setError(err.response?.data?.message || 'Failed to submit RSVP. Please try again.')
     } finally {
       setLoading(false)
     }
   }
 
-  const validDishes = dishes.filter(dish => dish.trim())
-  const isFormValid = name.trim() && (!bringingDish || validDishes.length > 0)
-
-  const handleDishChange = (index, value) => {
-    const newDishes = [...dishes]
-    newDishes[index] = value
-    setDishes(newDishes)
-    setError('')
-  }
-
-  const addDish = () => {
-    setDishes([...dishes, ''])
-  }
-
-  const removeDish = (index) => {
-    if (dishes.length > 1) {
-      const newDishes = dishes.filter((_, i) => i !== index)
-      setDishes(newDishes)
-      setError('')
-    }
-  }
+  const isFormValid = name.trim()
 
   return (
     <section className="rsvp-form-section">
@@ -110,61 +82,11 @@ function RSVPForm({ eventId, onRSVPSuccess }) {
           <label className="checkbox-label">
             <input
               type="checkbox"
-              checked={bringingDish}
-              onChange={(e) => {
-                setBringingDish(e.target.checked)
-                if (!e.target.checked) {
-                  setDishes([''])
-                }
-              }}
+              checked={willAttend}
+              onChange={(e) => setWillAttend(e.target.checked)}
               className="dish-checkbox"
             />
-            <span>I'm bringing a dish</span>
-          </label>
-          {bringingDish && (
-            <div className="dishes-container">
-              {dishes.map((dish, index) => (
-                <div key={index} className="dish-input-row">
-                  <input
-                    type="text"
-                    value={dish}
-                    onChange={(e) => handleDishChange(index, e.target.value)}
-                    onFocus={() => setError('')}
-                    placeholder={`Dish ${index + 1} name`}
-                    className="dish-name-input"
-                  />
-                  {dishes.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeDish(index)}
-                      className="remove-dish-button"
-                      aria-label="Remove dish"
-                    >
-                      ×
-                    </button>
-                  )}
-                </div>
-              ))}
-              <button
-                type="button"
-                onClick={addDish}
-                className="add-dish-button"
-              >
-                + Add Another Dish
-              </button>
-            </div>
-          )}
-        </div>
-
-        <div className="form-group checkbox-group">
-          <label className="checkbox-label">
-            <input
-              type="checkbox"
-              checked={whiteElephant}
-              onChange={(e) => setWhiteElephant(e.target.checked)}
-              className="dish-checkbox"
-            />
-            <span>I want to participate in white elephant</span>
+            <span>I will attend</span>
           </label>
         </div>
 
