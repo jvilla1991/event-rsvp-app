@@ -386,32 +386,85 @@ body {
   font-style: italic;
 }
 
-.attendee-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
-}
-
-.attendee-card {
-  background: linear-gradient(135deg, #f8f8f8 0%, var(--mexican-white) 100%);
-  padding: 25px;
+.attendee-table-container {
+  overflow-x: auto;
   border-radius: 12px;
-  border: 2px solid var(--mexican-green);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
 }
 
-.attendee-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(0, 104, 71, 0.2);
-  border-color: var(--mexican-green-light);
+.attendee-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--mexican-white);
+  border-radius: 12px;
+  overflow: hidden;
 }
 
-.attendee-name {
-  font-size: 22px;
+.attendee-table thead {
+  background: linear-gradient(135deg, var(--mexican-red) 0%, var(--mexican-red-light) 100%);
+  color: var(--mexican-white);
+}
+
+.attendee-table th {
+  padding: 18px 24px;
+  text-align: left;
+  font-size: 20px;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.attendee-table tbody tr {
+  border-bottom: 1px solid #e0e0e0;
+  transition: background-color 0.2s ease;
+}
+
+.attendee-table tbody tr:hover {
+  background-color: rgba(0, 104, 71, 0.05);
+}
+
+.attendee-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.attendee-name-cell {
+  padding: 18px 24px;
+  font-size: 20px;
+  font-weight: 600;
   color: var(--mexican-green);
-  margin-bottom: 12px;
+}
+
+.attendance-status-cell {
+  padding: 18px 24px;
+  font-size: 18px;
+}
+
+.attendance-yes {
+  color: var(--mexican-green);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.attendance-yes::before {
+  content: "✓";
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.attendance-no {
+  color: #666;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.attendance-no::before {
+  content: "✗";
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .dish-status {
@@ -510,8 +563,19 @@ body {
     font-size: 26px;
   }
 
-  .attendee-list {
-    grid-template-columns: 1fr;
+  .attendee-table-container {
+    overflow-x: auto;
+  }
+
+  .attendee-table th,
+  .attendee-name-cell,
+  .attendance-status-cell {
+    padding: 14px 16px;
+    font-size: 16px;
+  }
+
+  .attendee-table th {
+    font-size: 16px;
   }
 
   .submit-button {
