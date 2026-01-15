@@ -17,16 +17,6 @@ function AdminLogin() {
     e.preventDefault()
     setError('')
 
-    // TODO: Remove this bypass when implementing proper authentication
-    const BYPASS_AUTH = true; // Set to false when auth is implemented
-
-    if (BYPASS_AUTH) {
-      // Bypass mode: auto-login and redirect
-      login('dev-bypass-token')
-      navigate('/admin/dashboard')
-      return
-    }
-
     if (!username.trim() || !password.trim()) {
       setError('Please enter both username and password')
       return
@@ -44,7 +34,7 @@ function AdminLogin() {
       }
     } catch (err) {
       console.error('Login error:', err)
-      setError(err.response?.data?.message || 'Login failed. Please check your credentials.')
+      setError(err.response?.data?.error || err.response?.data?.message || 'Login failed. Please check your credentials.')
     } finally {
       setLoading(false)
     }
