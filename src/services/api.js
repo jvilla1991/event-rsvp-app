@@ -31,17 +31,32 @@ export const getEvents = async () => {
 }
 
 export const getEvent = async (id) => {
-  const response = await api.get(`/api/events/${id}`)
+  const parsedId = parseInt(id)
+  if (isNaN(parsedId)) {
+    throw new Error('Invalid event ID')
+  }
+  
+  const response = await api.get(`/api/events/${parsedId}`)
   return response.data
 }
 
 export const getEventRSVPs = async (eventId) => {
-  const response = await api.get(`/api/events/${eventId}/rsvps`)
+  const parsedEventId = parseInt(eventId)
+  if (isNaN(parsedEventId)) {
+    throw new Error('Invalid event ID')
+  }
+  
+  const response = await api.get(`/api/events/${parsedEventId}/rsvps`)
   return response.data
 }
 
 export const submitRSVP = async (eventId, rsvpData) => {
-  const response = await api.post(`/api/events/${eventId}/rsvps`, rsvpData)
+  const parsedEventId = parseInt(eventId)
+  if (isNaN(parsedEventId)) {
+    throw new Error('Invalid event ID')
+  }
+  
+  const response = await api.post(`/api/events/${parsedEventId}/rsvps`, rsvpData)
   return response.data
 }
 

@@ -13,14 +13,21 @@ function AttendeeList({ eventId }) {
         return
       }
 
+      // Validate eventId is a valid number
+      const parsedEventId = parseInt(eventId)
+      if (isNaN(parsedEventId)) {
+        setError('Invalid event ID.')
+        setLoading(false)
+        return
+      }
+
       try {
         setLoading(true)
         setError('')
-        const data = await getEventRSVPs(eventId)
+        const data = await getEventRSVPs(parsedEventId)
         setRsvps(data || [])
       } catch (err) {
         console.error('Error fetching RSVPs:', err)
-        setError('Failed to load attendees. Please try again later.')
       } finally {
         setLoading(false)
       }
@@ -73,37 +80,13 @@ function AttendeeList({ eventId }) {
         {rsvps.map((rsvp) => (
           <div key={rsvp.id} className="attendee-card">
             <div className="attendee-name">{rsvp.name}</div>
-            <div className="dish-status">
-              {rsvp.bringingDish ? (
-                <div className="dish-info">
-                  {(() => {
-                    const dishList = Array.isArray(rsvp.dishes) 
-                      ? rsvp.dishes 
-                      : (rsvp.dishes ? JSON.parse(rsvp.dishes) : [])
-                    const dishCount = dishList.length
-                    return (
-                      <>
-                        <span className="dish-yes">✓ Bringing {dishCount > 0 ? `${dishCount} dish${dishCount > 1 ? 'es' : ''}` : 'a dish'}</span>
-                        {dishCount > 0 && (
-                          <div className="dishes-list">
-                            {dishList.map((dish, index) => (
-                              <span key={index} className="dish-name">{dish}</span>
-                            ))}
-                          </div>
-                        )}
-                      </>
-                    )
-                  })()}
-                </div>
+            <div className="attendance-status">
+              {rsvp.willAttend ? (
+                <span className="attendance-yes">✓ Will attend</span>
               ) : (
-                <span className="dish-no">Not bringing a dish</span>
+                <span className="attendance-no">✗ Will not attend</span>
               )}
             </div>
-            {rsvp.whiteElephant && (
-              <div className="white-elephant-status">
-                <span className="white-elephant-yes">🎁 Participating in white elephant</span>
-              </div>
-            )}
           </div>
         ))}
       </div>

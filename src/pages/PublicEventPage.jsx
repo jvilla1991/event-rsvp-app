@@ -24,12 +24,20 @@ function PublicEventPage() {
       try {
         setLoading(true)
         setError('')
-        const eventData = await getEvent(parseInt(eventIdParam))
-        setEventId(parseInt(eventIdParam))
+        
+        // Validate eventId is a valid number
+        const parsedEventId = parseInt(eventIdParam)
+        if (isNaN(parsedEventId)) {
+          setError('Invalid event ID. Please select an event from the list.')
+          setLoading(false)
+          return
+        }
+        
+        const eventData = await getEvent(parsedEventId)
+        setEventId(parsedEventId)
         setEvent(eventData)
       } catch (err) {
         console.error('Error fetching event:', err)
-        setError('Failed to load event. Please try again later.')
       } finally {
         setLoading(false)
       }
