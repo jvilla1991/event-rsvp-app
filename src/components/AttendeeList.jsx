@@ -34,10 +34,6 @@ function AttendeeList({ eventId }) {
     }
 
     fetchRSVPs()
-    
-    // Refresh RSVPs every 5 seconds to show new submissions
-    const interval = setInterval(fetchRSVPs, 5000)
-    return () => clearInterval(interval)
   }, [eventId])
 
   if (loading) {
@@ -76,19 +72,29 @@ function AttendeeList({ eventId }) {
   return (
     <section className="attendee-list-section">
       <h2>Attendees ({rsvps.length})</h2>
-      <div className="attendee-list">
-        {rsvps.map((rsvp) => (
-          <div key={rsvp.id} className="attendee-card">
-            <div className="attendee-name">{rsvp.name}</div>
-            <div className="attendance-status">
-              {rsvp.willAttend ? (
-                <span className="attendance-yes">✓ Will attend</span>
-              ) : (
-                <span className="attendance-no">✗ Will not attend</span>
-              )}
-            </div>
-          </div>
-        ))}
+      <div className="attendee-table-container">
+        <table className="attendee-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Attendance Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rsvps.map((rsvp) => (
+              <tr key={rsvp.id}>
+                <td className="attendee-name-cell">{rsvp.name}</td>
+                <td className="attendance-status-cell">
+                  {rsvp.willAttend ? (
+                    <span className="attendance-yes">Attending</span>
+                  ) : (
+                    <span className="attendance-no">Not Attending</span>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </section>
   )
