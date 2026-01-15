@@ -1,15 +1,19 @@
 import { useState } from 'react'
+import { submitRSVP } from '../services/api'
 
-function RSVPForm({ onAddRSVP }) {
+function RSVPForm({ eventId, onRSVPSuccess }) {
   const [name, setName] = useState('')
   const [bringingDish, setBringingDish] = useState(false)
   const [dishes, setDishes] = useState([''])
   const [whiteElephant, setWhiteElephant] = useState(false)
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
+    setSuccess(false)
 
     if (!name.trim()) {
       setError('Please enter your name')
@@ -22,15 +26,42 @@ function RSVPForm({ onAddRSVP }) {
         setError('Please enter at least one dish name')
         return
       }
-      onAddRSVP(name, bringingDish, validDishes, whiteElephant)
-    } else {
-      onAddRSVP(name, bringingDish, [], whiteElephant)
     }
-    
-    setName('')
-    setBringingDish(false)
-    setDishes([''])
-    setWhiteElephant(false)
+
+    if (!eventId) {
+      setError('Event ID is missing')
+      return
+    }
+
+    try {
+      setLoading(true)
+      const rsvpData = {
+        name: name.trim(),
+        bringingDish: bringingDish,
+        dishes: bringingDish ? dishes.filter(dish => dish.trim()) : [],
+        whiteElephant: whiteElephant
+      }
+
+      await submitRSVP(eventId, rsvpData)
+      
+      setSuccess(true)
+      setName('')
+      setBringingDish(false)
+      setDishes([''])
+      setWhiteElephant(false)
+      
+      if (onRSVPSuccess) {
+        onRSVPSuccess()
+      }
+
+      // Clear success message after 3 seconds
+      setTimeout(() => setSuccess(false), 3000)
+    } catch (err) {
+      console.error('Error submitting RSVP:', err)
+      setError(err.response?.data?.message || 'Failed to submit RSVP. Please try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const validDishes = dishes.filter(dish => dish.trim())
@@ -138,13 +169,14 @@ function RSVPForm({ onAddRSVP }) {
         </div>
 
         {error && <div className="error-message">{error}</div>}
+        {success && <div className="success-message">RSVP submitted successfully!</div>}
 
         <button 
           type="submit" 
           className="submit-button"
-          disabled={!isFormValid}
+          disabled={!isFormValid || loading}
         >
-          Submit RSVP
+          {loading ? 'Submitting...' : 'Submit RSVP'}
         </button>
       </form>
     </section>
