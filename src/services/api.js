@@ -24,6 +24,34 @@ api.interceptors.request.use(
   }
 )
 
+// Response interceptor to handle 401 errors (token expiration/invalid)
+api.interceptors.response.use(
+  (response) => {
+    return response
+  },
+  (error) => {
+    // Handle 401 Unauthorized - token expired or invalid
+    if (error.response?.status === 401) {
+      // Clear the token from localStorage
+      localStorage.removeItem('authToken')
+      
+      // Dispatch a custom event that AuthContext can listen to
+      // This will update the auth state, and ProtectedRoute will handle redirect
+      window.dispatchEvent(new CustomEvent('auth:logout'))
+      
+      // Only do a hard redirect if we're not already on the login page
+      // This handles cases where the redirect might not happen naturally
+      if (window.location.pathname !== '/admin/login' && !window.location.pathname.startsWith('/admin/login')) {
+        // Use setTimeout to allow the event to propagate first
+        setTimeout(() => {
+          window.location.href = '/admin/login'
+        }, 0)
+      }
+    }
+    return Promise.reject(error)
+  }
+)
+
 // Public endpoints
 export const getEvents = async () => {
   const response = await api.get('/api/events')
