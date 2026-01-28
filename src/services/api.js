@@ -110,5 +110,70 @@ export const deleteEvent = async (id) => {
   return response.data
 }
 
+// Poll endpoints
+export const getEventPolls = async (eventId) => {
+  const parsedEventId = parseInt(eventId)
+  if (isNaN(parsedEventId)) {
+    throw new Error('Invalid event ID')
+  }
+  
+  const response = await api.get(`/api/events/${parsedEventId}/polls`)
+  return response.data
+}
+
+export const createPoll = async (eventId, pollData) => {
+  const parsedEventId = parseInt(eventId)
+  if (isNaN(parsedEventId)) {
+    throw new Error('Invalid event ID')
+  }
+  
+  const response = await api.post(`/api/events/${parsedEventId}/polls`, pollData)
+  return response.data
+}
+
+export const updatePoll = async (eventId, pollId, pollData) => {
+  const parsedEventId = parseInt(eventId)
+  const parsedPollId = parseInt(pollId)
+  if (isNaN(parsedEventId) || isNaN(parsedPollId)) {
+    throw new Error('Invalid event ID or poll ID')
+  }
+  
+  const response = await api.put(`/api/events/${parsedEventId}/polls/${parsedPollId}`, pollData)
+  return response.data
+}
+
+export const deletePoll = async (eventId, pollId) => {
+  const parsedEventId = parseInt(eventId)
+  const parsedPollId = parseInt(pollId)
+  if (isNaN(parsedEventId) || isNaN(parsedPollId)) {
+    throw new Error('Invalid event ID or poll ID')
+  }
+  
+  const response = await api.delete(`/api/events/${parsedEventId}/polls/${parsedPollId}`)
+  return response.data
+}
+
+export const submitPollVote = async (eventId, pollId, voteData) => {
+  const parsedEventId = parseInt(eventId)
+  const parsedPollId = parseInt(pollId)
+  if (isNaN(parsedEventId) || isNaN(parsedPollId)) {
+    throw new Error('Invalid event ID or poll ID')
+  }
+  
+  const response = await api.post(`/api/events/${parsedEventId}/polls/${parsedPollId}/votes`, voteData)
+  return response.data
+}
+
+export const getPollResults = async (eventId, pollId) => {
+  const parsedEventId = parseInt(eventId)
+  const parsedPollId = parseInt(pollId)
+  if (isNaN(parsedEventId) || isNaN(parsedPollId)) {
+    throw new Error('Invalid event ID or poll ID')
+  }
+  
+  const response = await api.get(`/api/events/${parsedEventId}/polls/${parsedPollId}/results`)
+  return response.data
+}
+
 export default api
 
