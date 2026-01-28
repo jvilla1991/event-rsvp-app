@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import RSVPForm from '../components/RSVPForm'
 import AttendeeList from '../components/AttendeeList'
+import PollDisplay from '../components/PollDisplay'
 import { getEvent } from '../services/api'
 
 function PublicEventPage() {
@@ -88,7 +89,15 @@ function PublicEventPage() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>{event.title || 'Event RSVP'}</h1>
+        <div className="header-title-row">
+          <button
+            onClick={() => navigate('/')}
+            className="view-all-events-button"
+          >
+            ← View All Events
+          </button>
+          <h1>{event.title || 'Event RSVP'}</h1>
+        </div>
         {event.description && (
           <p className="subtitle">{event.description}</p>
         )}
@@ -115,6 +124,7 @@ function PublicEventPage() {
       
       <main className="app-main">
         <RSVPForm eventId={eventId} onRSVPSuccess={handleRSVPSuccess} />
+        <PollDisplay eventId={eventId} />
         <div className="attendees-toggle-section">
           <button
             onClick={() => setShowAttendees(!showAttendees)}
