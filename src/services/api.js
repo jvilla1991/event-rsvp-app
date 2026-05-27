@@ -175,5 +175,33 @@ export const getPollResults = async (eventId, pollId) => {
   return response.data
 }
 
+// Invite endpoints
+export const createInvite = async (eventId, name) => {
+  const parsedEventId = parseInt(eventId)
+  if (isNaN(parsedEventId)) throw new Error('Invalid event ID')
+  const response = await api.post(`/api/events/${parsedEventId}/invites`, { name: name || null })
+  return response.data
+}
+
+export const getInvites = async (eventId) => {
+  const parsedEventId = parseInt(eventId)
+  if (isNaN(parsedEventId)) throw new Error('Invalid event ID')
+  const response = await api.get(`/api/events/${parsedEventId}/invites`)
+  return response.data
+}
+
+export const viewInvite = async (token) => {
+  const response = await api.get(`/api/invites/${token}`)
+  return response.data
+}
+
+export const deleteInvite = async (eventId, inviteId) => {
+  const parsedEventId = parseInt(eventId)
+  const parsedInviteId = parseInt(inviteId)
+  if (isNaN(parsedEventId) || isNaN(parsedInviteId)) throw new Error('Invalid ID')
+  const response = await api.delete(`/api/events/${parsedEventId}/invites/${parsedInviteId}`)
+  return response.data
+}
+
 export default api
 
