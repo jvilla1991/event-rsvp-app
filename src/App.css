@@ -1,4 +1,4 @@
-/* Mexican-themed color palette */
+﻿/* Mexican-themed color palette */
 :root {
   --mexican-green: #006847;
   --mexican-white: #FFFFFF;
@@ -9,12 +9,74 @@
   --mexican-orange-light: #F39C12;
   --text-dark: #1a1a1a;
   --border-color: #ddd;
+
+  /* Surface tokens (light mode defaults) */
+  --bg-page: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
+  --bg-card: #ffffff;
+  --bg-input: #ffffff;
+  --bg-subtle: #f0f0f0;
+  --bg-row-alt: #f9f9f9;
+  --bg-disabled: #e0e0e0;
+  --text-primary: #1a1a1a;
+  --text-muted: #999;
+  --text-subtle: #666;
+  --border: #ddd;
+  --shadow-card: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] {
+  --mexican-green: #007a50;
+  --mexican-green-light: #009960;
+  --mexican-white: #e8e8e8;
+  --mexican-red: #e63946;
+  --mexican-red-light: #ff6b6b;
+  --mexican-orange: #f4a261;
+  --mexican-orange-light: #f7c59f;
+  --text-dark: #e8e8e8;
+  --border-color: #444;
+
+  --bg-page: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  --bg-card: #1e1e2e;
+  --bg-input: #2a2a3e;
+  --bg-subtle: #252535;
+  --bg-row-alt: #232333;
+  --bg-disabled: #3a3a4e;
+  --text-primary: #e8e8e8;
+  --text-muted: #888;
+  --text-subtle: #aaa;
+  --border: #444;
+  --shadow-card: rgba(0, 0, 0, 0.4);
+}
+
+/* ── Theme toggle button (fixed, always visible) ────────────────────────── */
+.theme-toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 9999;
+  padding: 8px 16px;
+  background: var(--bg-card);
+  color: var(--text-dark);
+  border: 2px solid var(--border-color);
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px var(--shadow-card);
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.theme-toggle:hover {
+  border-color: var(--mexican-green);
+  color: var(--mexican-green);
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  transition: background-color 0.3s ease, background 0.3s ease,
+              color 0.3s ease, border-color 0.3s ease;
 }
 
 body {
@@ -23,8 +85,10 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, var(--mexican-white) 0%, #f5f5f5 100%);
+  background: var(--bg-page);
+  color: var(--text-primary);
   min-height: 100vh;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 .app {
@@ -256,10 +320,10 @@ body {
 }
 
 .rsvp-form-section {
-  background: var(--mexican-white);
+  background: var(--bg-card);
   padding: 40px;
   border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px var(--shadow-card);
   border: 3px solid var(--mexican-green);
 }
 
@@ -295,7 +359,7 @@ body {
   border-radius: 8px;
   outline: none;
   transition: all 0.3s ease;
-  background: var(--mexican-white);
+  background: var(--bg-input);
   color: var(--text-dark);
 }
 
@@ -305,7 +369,7 @@ body {
 }
 
 .name-input::placeholder {
-  color: #999;
+  color: var(--text-muted);
   font-size: 18px;
 }
 
@@ -327,7 +391,7 @@ body {
 }
 
 .checkbox-label:hover {
-  background-color: #f0f0f0;
+  background-color: var(--bg-subtle);
 }
 
 .dish-checkbox {
@@ -364,7 +428,7 @@ body {
   border-radius: 8px;
   outline: none;
   transition: all 0.3s ease;
-  background: var(--mexican-white);
+  background: var(--bg-card);
   color: var(--text-dark);
   flex: 1;
 }
@@ -375,7 +439,7 @@ body {
 }
 
 .dish-name-input::placeholder {
-  color: #999;
+  color: var(--text-muted);
   font-size: 18px;
 }
 
@@ -456,7 +520,7 @@ body {
 }
 
 .submit-button:disabled {
-  background: #cccccc;
+  background: var(--bg-disabled);
   cursor: not-allowed;
   opacity: 0.6;
   transform: none;
@@ -470,7 +534,7 @@ body {
 
 /* Attendee List Styles */
 .attendee-list-section {
-  background: var(--mexican-white);
+  background: var(--bg-card);
   padding: 40px;
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -487,7 +551,7 @@ body {
 .empty-state {
   text-align: center;
   padding: 60px 20px;
-  color: #666;
+  color: var(--text-subtle);
 }
 
 .empty-state p {
@@ -504,7 +568,7 @@ body {
 .attendee-table {
   width: 100%;
   border-collapse: collapse;
-  background: var(--mexican-white);
+  background: var(--bg-card);
   border-radius: 12px;
   overflow: hidden;
 }
@@ -557,13 +621,13 @@ body {
 }
 
 .attendance-yes::before {
-  content: "✓";
+  content: "âœ“";
   font-size: 20px;
   font-weight: bold;
 }
 
 .attendance-no {
-  color: #666;
+  color: var(--text-subtle);
   font-weight: 500;
   display: inline-flex;
   align-items: center;
@@ -571,7 +635,7 @@ body {
 }
 
 .attendance-no::before {
-  content: "✗";
+  content: "âœ—";
   font-size: 18px;
   font-weight: bold;
 }
@@ -595,7 +659,7 @@ body {
 }
 
 .dish-yes::before {
-  content: "✓";
+  content: "âœ“";
   font-size: 24px;
   font-weight: bold;
   color: var(--mexican-green);
@@ -621,7 +685,7 @@ body {
 }
 
 .dish-no {
-  color: #666;
+  color: var(--text-subtle);
 }
 
 .white-elephant-status {
@@ -721,7 +785,7 @@ body {
 .error-state {
   text-align: center;
   padding: 60px 20px;
-  background: var(--mexican-white);
+  background: var(--bg-card);
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   margin: 40px auto;
@@ -796,7 +860,7 @@ body {
 
 .create-button {
   padding: 10px 20px;
-  background: var(--mexican-white);
+  background: var(--bg-card);
   color: var(--mexican-green);
   border: none;
   border-radius: 8px;
@@ -807,7 +871,7 @@ body {
 }
 
 .create-button:hover {
-  background: #f0f0f0;
+  background: var(--bg-subtle);
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -854,7 +918,7 @@ body {
 }
 
 .event-card {
-  background: var(--mexican-white);
+  background: var(--bg-card);
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
@@ -891,13 +955,13 @@ body {
 
 .event-card-address {
   font-size: 14px;
-  color: #666;
+  color: var(--text-subtle);
   margin-bottom: 8px;
 }
 
 .event-card-date {
   font-size: 14px;
-  color: #666;
+  color: var(--text-subtle);
   font-weight: 500;
 }
 
@@ -931,12 +995,12 @@ body {
 }
 
 .edit-button {
-  background: #ffa500;
+  background: var(--mexican-orange);
   color: var(--mexican-white);
 }
 
 .edit-button:hover {
-  background: #ff8c00;
+  background: var(--mexican-orange-light);
   transform: translateY(-2px);
 }
 
@@ -952,7 +1016,7 @@ body {
 
 /* Event Form */
 .event-form-container {
-  background: var(--mexican-white);
+  background: var(--bg-card);
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   padding: 30px;
@@ -1002,7 +1066,7 @@ body {
 
 .event-form input:disabled,
 .event-form textarea:disabled {
-  background-color: #f5f5f5;
+  background-color: var(--bg-subtle);
   cursor: not-allowed;
 }
 
@@ -1020,7 +1084,7 @@ body {
 
 .cancel-button {
   padding: 12px 24px;
-  background: #ccc;
+  background: var(--bg-disabled);
   color: var(--text-dark);
   border: none;
   border-radius: 8px;
@@ -1031,12 +1095,12 @@ body {
 }
 
 .cancel-button:hover {
-  background: #bbb;
+  background: var(--bg-disabled);
   transform: translateY(-2px);
 }
 
 .cancel-button:disabled {
-  background: #e0e0e0;
+  background: var(--bg-disabled);
   cursor: not-allowed;
   transform: none;
 }
@@ -1058,10 +1122,10 @@ body {
 
 
 .polls-hint {
-  color: #666;
+  color: var(--text-subtle);
   font-style: italic;
   padding: 15px;
-  background: #f9f9f9;
+  background: var(--bg-row-alt);
   border-radius: 8px;
   border-left: 3px solid var(--mexican-orange);
   margin-bottom: 20px;
@@ -1081,7 +1145,7 @@ body {
 
 .view-toggle-button {
   padding: 10px 16px;
-  background: var(--mexican-white);
+  background: var(--bg-card);
   color: var(--mexican-green);
   border: 2px solid var(--mexican-green);
   font-size: 20px;
@@ -1129,7 +1193,7 @@ body {
 }
 
 .event-selection-card {
-  background: var(--mexican-white);
+  background: var(--bg-card);
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   padding: 25px;
@@ -1164,13 +1228,13 @@ body {
 
 .event-selection-address {
   font-size: 14px;
-  color: #666;
+  color: var(--text-subtle);
   margin: 0;
 }
 
 .event-selection-date {
   font-size: 14px;
-  color: #666;
+  color: var(--text-subtle);
   font-weight: 500;
   margin: 0;
 }
@@ -1204,7 +1268,7 @@ body {
 .event-selection-table {
   width: 100%;
   border-collapse: collapse;
-  background: var(--mexican-white);
+  background: var(--bg-card);
   border-radius: 12px;
   overflow: hidden;
 }
@@ -1264,7 +1328,7 @@ body {
 .event-table-address {
   padding: 18px 16px;
   font-size: 16px;
-  color: #666;
+  color: var(--text-subtle);
   max-width: 200px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1350,7 +1414,7 @@ body {
 
 /* Poll Styles */
 .polls-section {
-  background: var(--mexican-white);
+  background: var(--bg-card);
   padding: 40px;
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -1371,7 +1435,7 @@ body {
 }
 
 .poll-card-public {
-  background: #f9f9f9;
+  background: var(--bg-row-alt);
   padding: 30px;
   border-radius: 12px;
   border: 2px solid var(--mexican-orange);
@@ -1387,7 +1451,7 @@ body {
 
 .poll-hint {
   font-size: 16px;
-  color: #666;
+  color: var(--text-subtle);
   font-style: italic;
   margin-bottom: 20px;
 }
@@ -1409,7 +1473,7 @@ body {
   align-items: center;
   gap: 12px;
   padding: 15px;
-  background: var(--mexican-white);
+  background: var(--bg-card);
   border: 2px solid var(--border-color);
   border-radius: 8px;
   cursor: pointer;
@@ -1530,7 +1594,7 @@ body {
 .poll-result-bar-container {
   width: 100%;
   height: 30px;
-  background: #e0e0e0;
+  background: var(--bg-disabled);
   border-radius: 15px;
   overflow: hidden;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -1568,7 +1632,7 @@ body {
 }
 
 .poll-list-container {
-  background: var(--mexican-white);
+  background: var(--bg-card);
   padding: 40px;
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -1613,7 +1677,7 @@ body {
 }
 
 .poll-card {
-  background: #f9f9f9;
+  background: var(--bg-row-alt);
   padding: 25px;
   border-radius: 12px;
   border: 2px solid var(--mexican-orange);
@@ -1661,7 +1725,7 @@ body {
   font-size: 16px;
   color: var(--text-dark);
   padding: 8px 12px;
-  background: var(--mexican-white);
+  background: var(--bg-card);
   border-left: 3px solid var(--mexican-orange);
   border-radius: 4px;
 }
@@ -1705,7 +1769,7 @@ body {
 }
 
 .poll-form-container {
-  background: var(--mexican-white);
+  background: var(--bg-card);
   padding: 40px;
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -1739,7 +1803,7 @@ body {
   border-radius: 8px;
   outline: none;
   transition: all 0.3s ease;
-  background: var(--mexican-white);
+  background: var(--bg-card);
   color: var(--text-dark);
 }
 
@@ -1824,7 +1888,7 @@ body {
   }
 }
 
-/* ── Invite Share (public event page) ─────────────────────────────────────── */
+/* â”€â”€ Invite Share (public event page) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .invite-share-section {
   display: flex;
@@ -1853,7 +1917,7 @@ body {
 
 .invite-share-panel {
   width: 100%;
-  background: var(--mexican-white);
+  background: var(--bg-card);
   border: 3px solid var(--mexican-orange);
   border-radius: 15px;
   padding: 30px;
@@ -1878,7 +1942,7 @@ body {
   background: none;
   border: none;
   font-size: 20px;
-  color: #999;
+  color: var(--text-muted);
   cursor: pointer;
   padding: 4px 8px;
   border-radius: 6px;
@@ -1887,13 +1951,13 @@ body {
 }
 
 .invite-close-button:hover {
-  background: #f0f0f0;
+  background: var(--bg-subtle);
   color: var(--text-dark);
 }
 
 .invite-share-hint {
   font-size: 16px;
-  color: #666;
+  color: var(--text-subtle);
   margin-bottom: 20px;
   line-height: 1.5;
 }
@@ -1921,7 +1985,7 @@ body {
 }
 
 .invite-name-input::placeholder {
-  color: #bbb;
+  color: var(--text-muted);
 }
 
 .invite-generate-button {
@@ -1981,7 +2045,7 @@ body {
   padding: 12px 16px;
   border: 2px solid var(--mexican-orange);
   border-radius: 8px;
-  background: #fff8f0;
+  background: var(--bg-input);
   color: var(--text-dark);
   outline: none;
   font-family: monospace;
@@ -2028,11 +2092,11 @@ body {
   background: rgba(230, 126, 34, 0.08);
 }
 
-/* ── Invite List (admin panel) ────────────────────────────────────────────── */
+/* â”€â”€ Invite List (admin panel) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .invite-list-panel {
   margin-top: 30px;
-  background: var(--mexican-white);
+  background: var(--bg-card);
   border: 2px solid var(--mexican-orange);
   border-radius: 12px;
   padding: 25px;
@@ -2056,12 +2120,12 @@ body {
 
 .invite-list-subtitle {
   font-size: 14px;
-  color: #666;
+  color: var(--text-subtle);
   margin: 0;
 }
 
 .invite-panel-close-button {
-  background: #f0f0f0;
+  background: var(--bg-subtle);
   border: none;
   border-radius: 8px;
   padding: 8px 14px;
@@ -2074,12 +2138,12 @@ body {
 }
 
 .invite-panel-close-button:hover {
-  background: #e0e0e0;
+  background: var(--bg-disabled);
 }
 
 .invite-list-status {
   font-size: 16px;
-  color: #666;
+  color: var(--text-subtle);
   padding: 20px 0;
   text-align: center;
 }
@@ -2092,7 +2156,7 @@ body {
 .invite-list-empty {
   text-align: center;
   padding: 30px 20px;
-  color: #666;
+  color: var(--text-subtle);
 }
 
 .invite-list-empty p {
@@ -2103,7 +2167,7 @@ body {
 .invite-list-empty-hint {
   font-size: 14px;
   font-style: italic;
-  color: #999;
+  color: var(--text-muted);
 }
 
 /* Invite table */
@@ -2155,14 +2219,14 @@ body {
 }
 
 .invite-anonymous {
-  color: #aaa;
+  color: var(--text-muted);
   font-style: italic;
   font-weight: 400;
 }
 
 .invite-date-cell {
   font-size: 13px;
-  color: #666;
+  color: var(--text-subtle);
 }
 
 .invite-badge {
@@ -2180,7 +2244,7 @@ body {
 
 .invite-badge-pending {
   background: rgba(0, 0, 0, 0.06);
-  color: #888;
+  color: var(--text-muted);
 }
 
 .invite-delete-button {
@@ -2240,7 +2304,7 @@ body {
   }
 }
 
-/* ── Required field star ─────────────────────────────────────────────────── */
+/* â”€â”€ Required field star â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .required-star {
   color: var(--mexican-red);
@@ -2248,7 +2312,7 @@ body {
   margin-left: 2px;
 }
 
-/* ── Admin toggle (allow time proposal) ──────────────────────────────────── */
+/* â”€â”€ Admin toggle (allow time proposal) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .toggle-label {
   display: flex;
@@ -2275,14 +2339,14 @@ body {
 
 .toggle-hint {
   font-size: 13px;
-  color: #888;
+  color: var(--text-muted);
   margin-top: 6px;
   margin-left: 28px;
   font-style: italic;
   line-height: 1.4;
 }
 
-/* ── Attendance radio buttons ─────────────────────────────────────────────── */
+/* â”€â”€ Attendance radio buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .radio-group-label {
   font-size: 16px;
@@ -2310,7 +2374,7 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   user-select: none;
-  background: var(--mexican-white);
+  background: var(--bg-card);
   color: var(--text-dark);
 }
 
@@ -2319,10 +2383,10 @@ body {
 }
 
 .radio-label:hover {
-  border-color: #aaa;
+  border-color: var(--border-color);
 }
 
-/* Yes — green when selected */
+/* Yes â€” green when selected */
 .radio-label.radio-yes.radio-selected {
   background: var(--mexican-green);
   border-color: var(--mexican-green);
@@ -2334,7 +2398,7 @@ body {
   color: var(--mexican-green);
 }
 
-/* No — red when selected */
+/* No â€” red when selected */
 .radio-label.radio-no.radio-selected {
   background: var(--mexican-red);
   border-color: var(--mexican-red);
@@ -2346,7 +2410,7 @@ body {
   color: var(--mexican-red);
 }
 
-/* ── Propose Time Modal ───────────────────────────────────────────────────── */
+/* â”€â”€ Propose Time Modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .modal-overlay {
   position: fixed;
@@ -2360,7 +2424,7 @@ body {
 }
 
 .modal-box {
-  background: var(--mexican-white);
+  background: var(--bg-card);
   border-radius: 16px;
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.25);
   padding: 40px;
@@ -2377,7 +2441,7 @@ body {
 
 .modal-subtitle {
   font-size: 16px;
-  color: #555;
+  color: var(--text-subtle);
   margin-bottom: 28px;
   line-height: 1.5;
 }
@@ -2397,7 +2461,7 @@ body {
 
 .modal-label-optional {
   font-weight: 400;
-  color: #888;
+  color: var(--text-muted);
 }
 
 .modal-datetime-input {
