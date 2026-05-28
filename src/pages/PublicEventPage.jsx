@@ -5,6 +5,7 @@ import AttendeeList from '../components/AttendeeList'
 import PollDisplay from '../components/PollDisplay'
 import InviteShare from '../components/InviteShare'
 import { getEvent, viewInvite } from '../services/api'
+import { formatEventDate } from '../utils/dateFormat'
 
 function PublicEventPage() {
   const { eventId: eventIdParam } = useParams()
@@ -131,7 +132,7 @@ function PublicEventPage() {
         )}
         {event.eventDateTime && (
           <p className="event-date">
-            {new Date(event.eventDateTime).toLocaleString()}
+            {formatEventDate(event.eventDateTime)}
           </p>
         )}
         {event.address && (

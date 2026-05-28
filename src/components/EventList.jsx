@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getEvents } from '../services/api'
+import { formatEventDate } from '../utils/dateFormat'
 
 function EventList({ onView, onEdit, onDelete, onInvites }) {
   const [events, setEvents] = useState([])
@@ -64,7 +65,7 @@ function EventList({ onView, onEdit, onDelete, onInvites }) {
               )}
               {event.eventDateTime && (
                 <p className="event-card-date">
-                  {new Date(event.eventDateTime).toLocaleString()}
+                  {formatEventDate(event.eventDateTime)}
                 </p>
               )}
             </div>
