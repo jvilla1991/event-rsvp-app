@@ -184,6 +184,41 @@ body {
   text-underline-offset: 4px;
 }
 
+.address-row {
+  display: flex;
+  justify-content: center;
+}
+
+.address-link-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.address-copy-button {
+  position: absolute;
+  left: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 6px 4px;
+  opacity: 0.75;
+  transition: opacity 0.2s ease, transform 0.1s ease;
+  line-height: 1;
+  color: var(--mexican-white);
+}
+
+.address-copy-button:hover {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+.address-copy-button:active {
+  transform: scale(0.95);
+}
+
 .app-main {
   display: flex;
   flex-direction: column;
