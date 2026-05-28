@@ -16,6 +16,7 @@ function PublicEventPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [showAttendees, setShowAttendees] = useState(false)
+  const [addressCopied, setAddressCopied] = useState(false)
   // Name pre-filled from invite — set via router state (InvitePage redirect) or ?invite= query
   const [inviteeName, setInviteeName] = useState(location.state?.inviteeName || '')
 
@@ -73,6 +74,16 @@ function PublicEventPage() {
     return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`
   }
 
+  const handleCopyAddress = async () => {
+    try {
+      await navigator.clipboard.writeText(event.address)
+      setAddressCopied(true)
+      setTimeout(() => setAddressCopied(false), 2000)
+    } catch {
+      // Clipboard API unavailable — silently ignore
+    }
+  }
+
   if (loading) {
     return (
       <div className="app">
@@ -126,15 +137,27 @@ function PublicEventPage() {
         {event.address && (
           <div className="event-address">
             <p className="address-label">Event Location:</p>
-            <a
-              href={getGoogleMapsUrl(event.address)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="address-link"
-            >
-              <span className="address-text"> {event.address}</span>
-              <span className="address-hint">Click to open in Google Maps →</span>
-            </a>
+            <div className="address-row">
+              <div className="address-link-wrap">
+                <a
+                  href={getGoogleMapsUrl(event.address)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="address-link"
+                >
+                  <span className="address-text">{event.address}</span>
+                  <span className="address-hint">Click to open in Google Maps →</span>
+                </a>
+                <button
+                  type="button"
+                  className="address-copy-button"
+                  onClick={handleCopyAddress}
+                  title={addressCopied ? 'Copied!' : 'Copy address'}
+                >
+                  {addressCopied ? '✓' : '⧉'}
+                </button>
+              </div>
+            </div>
           </div>
         )}
         <br></br>
