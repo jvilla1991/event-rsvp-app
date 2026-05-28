@@ -31,7 +31,6 @@ function InvitePage() {
     return (
       <div className="app">
         <div className="invite-error-state">
-          <p className="invite-error-icon">🔗</p>
           <p className="invite-error-title">Invalid Invite Link</p>
           <p className="invite-error-message">{error}</p>
           <button className="invite-error-button" onClick={() => navigate('/')}>
@@ -45,7 +44,6 @@ function InvitePage() {
   return (
     <div className="app">
       <div className="invite-loading-state">
-        <p className="invite-loading-icon">✉️</p>
         <p className="invite-loading-text">Opening your invite...</p>
       </div>
     </div>

@@ -136,7 +136,7 @@ function EventSelection() {
                     <p className="event-selection-description">{event.description}</p>
                   )}
                   {event.address && (
-                    <p className="event-selection-address">📍 {event.address}</p>
+                    <p className="event-selection-address">{event.address}</p>
                   )}
                   {event.eventDateTime && (
                     <p className="event-selection-date">
