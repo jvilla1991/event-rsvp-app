@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { createEvent, updateEvent, deleteEvent, getEvent } from '../services/api'
 import EventList from '../components/EventList'
 import EventForm from '../components/EventForm'
+import InviteList from '../components/InviteList'
 
 function AdminDashboard() {
   const { logout } = useAuth()
@@ -12,6 +13,10 @@ function AdminDashboard() {
   const [editingEvent, setEditingEvent] = useState(null)
   const [loading, setLoading] = useState(false)
   const [refreshKey, setRefreshKey] = useState(0)
+
+  // Invite tracking panel state
+  const [inviteEventId, setInviteEventId] = useState(null)
+  const [inviteEventTitle, setInviteEventTitle] = useState('')
 
   const handleLogout = () => {
     logout()
@@ -45,12 +50,12 @@ function AdminDashboard() {
     if (!window.confirm('Are you sure you want to delete this event? This action cannot be undone.')) {
       return
     }
-
     try {
       setLoading(true)
       await deleteEvent(eventId)
-      // Refresh event list
       setRefreshKey(prev => prev + 1)
+      // Close invite panel if it was showing this event
+      if (inviteEventId === eventId) setInviteEventId(null)
     } catch (err) {
       console.error('Error deleting event:', err)
       alert('Failed to delete event. Please try again.')
@@ -69,7 +74,6 @@ function AdminDashboard() {
       }
       setShowForm(false)
       setEditingEvent(null)
-      // Refresh event list
       setRefreshKey(prev => prev + 1)
     } catch (err) {
       console.error('Error saving event:', err)
@@ -82,6 +86,16 @@ function AdminDashboard() {
   const handleFormCancel = () => {
     setShowForm(false)
     setEditingEvent(null)
+  }
+
+  const handleInvites = (eventId, eventTitle) => {
+    setInviteEventId(eventId)
+    setInviteEventTitle(eventTitle || 'Event')
+  }
+
+  const handleCloseInvites = () => {
+    setInviteEventId(null)
+    setInviteEventTitle('')
   }
 
   return (
@@ -99,6 +113,7 @@ function AdminDashboard() {
           </button>
         </div>
       </div>
+
       <main className="admin-dashboard-main">
         {showForm ? (
           <EventForm
@@ -108,12 +123,23 @@ function AdminDashboard() {
             loading={loading}
           />
         ) : (
-          <EventList
-            key={refreshKey}
-            onView={handleView}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
+          <>
+            <EventList
+              key={refreshKey}
+              onView={handleView}
+              onEdit={handleEdit}
+              onInvites={handleInvites}
+              onDelete={handleDelete}
+            />
+
+            {inviteEventId && (
+              <InviteList
+                eventId={inviteEventId}
+                eventTitle={inviteEventTitle}
+                onClose={handleCloseInvites}
+              />
+            )}
+          </>
         )}
       </main>
     </div>
@@ -121,4 +147,3 @@ function AdminDashboard() {
 }
 
 export default AdminDashboard
-

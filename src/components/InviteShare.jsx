@@ -15,7 +15,7 @@ function InviteShare({ eventId }) {
     try {
       setLoading(true)
       const invite = await createInvite(eventId, name.trim() || null)
-      const link = `${window.location.origin}/invite/${invite.token}`
+      const link = `${window.location.origin}/event/${eventId}?invite=${invite.token}`
       setInviteLink(link)
     } catch {
       setError('Failed to generate invite link. Please try again.')
@@ -50,7 +50,7 @@ function InviteShare({ eventId }) {
     <section className="invite-share-section">
       {!open ? (
         <button className="invite-share-toggle" onClick={() => setOpen(true)}>
-          📤 Share This Event
+          Share This Event
         </button>
       ) : (
         <div className="invite-share-panel">
@@ -64,7 +64,7 @@ function InviteShare({ eventId }) {
           {!inviteLink ? (
             <div className="invite-share-form">
               <p className="invite-share-hint">
-                Generate a unique shareable link. Optionally enter a name so you can track who has opened it.
+                Generate a unique shareable link.
               </p>
               <div className="invite-form-row">
                 <input
