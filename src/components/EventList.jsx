@@ -60,7 +60,7 @@ function EventList({ onView, onEdit, onDelete, onInvites }) {
                 <p className="event-card-description">{event.description}</p>
               )}
               {event.address && (
-                <p className="event-card-address">📍 {event.address}</p>
+                <p className="event-card-address">{event.address}</p>
               )}
               {event.eventDateTime && (
                 <p className="event-card-date">
