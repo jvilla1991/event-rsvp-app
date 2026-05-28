@@ -2410,8 +2410,6 @@ body {
   }
 }
 
-/* ── Proposed time in attendee list ─────────────────────────────────────── */
-
 .proposed-time-note {
   font-size: 13px;
   color: var(--mexican-orange);
