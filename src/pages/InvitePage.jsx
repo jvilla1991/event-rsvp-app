@@ -16,7 +16,10 @@ function InvitePage() {
       try {
         const invite = await viewInvite(token)
         // Replace history so the back button goes to the event, not back to /invite/:token
-        navigate(`/event/${invite.eventId}`, { replace: true })
+        navigate(`/event/${invite.eventId}`, {
+          replace: true,
+          state: { inviteeName: invite.name || '' }
+        })
       } catch {
         setError('This invite link is invalid or no longer exists.')
       }

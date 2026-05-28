@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { submitRSVP } from '../services/api'
 import ProposeTimeModal from './ProposeTimeModal'
 
-function RSVPForm({ eventId, onRSVPSuccess, allowTimeProposal = false }) {
-  const [name, setName] = useState('')
+function RSVPForm({ eventId, onRSVPSuccess, allowTimeProposal = false, initialName = '' }) {
+  const [name, setName] = useState(initialName)
   const [willAttend, setWillAttend] = useState(true)
   const [showModal, setShowModal] = useState(false)
   const [error, setError] = useState('')
