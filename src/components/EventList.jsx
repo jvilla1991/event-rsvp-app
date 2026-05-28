@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getEvents } from '../services/api'
 
-function EventList({ onView, onEdit, onDelete }) {
+function EventList({ onView, onEdit, onDelete, onInvites }) {
   const [events, setEvents] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -85,6 +85,14 @@ function EventList({ onView, onEdit, onDelete }) {
                   Edit
                 </button>
               )}
+              {onInvites && (
+                <button
+                  onClick={() => onInvites(event.id, event.title)}
+                  className="action-button invites-button"
+                >
+                  Invites
+                </button>
+              )}
               {onDelete && (
                 <button
                   onClick={() => onDelete(event.id)}
@@ -102,4 +110,3 @@ function EventList({ onView, onEdit, onDelete }) {
 }
 
 export default EventList
-
