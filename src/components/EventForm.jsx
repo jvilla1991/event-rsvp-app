@@ -7,6 +7,7 @@ function EventForm({ event, onSubmit, onCancel, loading }) {
   const [address, setAddress] = useState('')
   const [eventDateTime, setEventDateTime] = useState('')
   const [description, setDescription] = useState('')
+  const [allowTimeProposal, setAllowTimeProposal] = useState(false)
   const [error, setError] = useState('')
   const [polls, setPolls] = useState([])
   const [newPolls, setNewPolls] = useState([]) // For polls created before event is saved
@@ -20,6 +21,7 @@ function EventForm({ event, onSubmit, onCancel, loading }) {
       setTitle(event.title || '')
       setAddress(event.address || '')
       setDescription(event.description || '')
+      setAllowTimeProposal(event.allowTimeProposal ?? false)
       if (event.eventDateTime) {
         // Format datetime for input (YYYY-MM-DDTHH:mm)
         const date = new Date(event.eventDateTime)
@@ -41,6 +43,7 @@ function EventForm({ event, onSubmit, onCancel, loading }) {
       setAddress('')
       setEventDateTime('')
       setDescription('')
+      setAllowTimeProposal(false)
       setPolls([])
       setNewPolls([])
     }
@@ -80,6 +83,7 @@ function EventForm({ event, onSubmit, onCancel, loading }) {
       address: address.trim() || null,
       description: description.trim() || null,
       eventDateTime: eventDateTime ? new Date(eventDateTime).toISOString() : null,
+      allowTimeProposal,
     }
 
     // If creating new event with polls, pass polls data to be created after event
@@ -270,6 +274,24 @@ function EventForm({ event, onSubmit, onCancel, loading }) {
         </div>
 
         {error && <div className="error-message">{error}</div>}
+
+        <div className="form-group">
+          <label className="toggle-label">
+            <input
+              type="checkbox"
+              checked={allowTimeProposal}
+              onChange={(e) => setAllowTimeProposal(e.target.checked)}
+              className="toggle-checkbox"
+              disabled={loading}
+            />
+            <span className="toggle-text">
+              Allow attendees to propose an alternative time when declining
+            </span>
+          </label>
+          <p className="toggle-hint">
+            When enabled, attendees who select "No" will be prompted with a modal to suggest a new time.
+          </p>
+        </div>
 
         {/* Polls Section - Above buttons */}
         <div className="event-polls-section">
