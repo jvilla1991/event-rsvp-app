@@ -1,4 +1,4 @@
-/* Mexican-themed color palette */
+﻿/* Mexican-themed color palette */
 :root {
   --mexican-green: #006847;
   --mexican-white: #FFFFFF;
@@ -9,6 +9,58 @@
   --mexican-orange-light: #F39C12;
   --text-dark: #1a1a1a;
   --border-color: #ddd;
+
+  /* Surface tokens (light mode defaults) */
+  --bg-page: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
+  --bg-card: #ffffff;
+  --bg-input: #ffffff;
+  --text-primary: #1a1a1a;
+  --text-muted: #999;
+  --border: #ddd;
+  --shadow-card: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] {
+  --mexican-green: #00a86b;
+  --mexican-green-light: #00c97e;
+  --mexican-white: #e8e8e8;
+  --mexican-red: #e63946;
+  --mexican-red-light: #ff6b6b;
+  --mexican-orange: #f4a261;
+  --mexican-orange-light: #f7c59f;
+  --text-dark: #e8e8e8;
+  --border-color: #444;
+
+  --bg-page: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  --bg-card: #1e1e2e;
+  --bg-input: #2a2a3e;
+  --text-primary: #e8e8e8;
+  --text-muted: #888;
+  --border: #444;
+  --shadow-card: rgba(0, 0, 0, 0.4);
+}
+
+/* ── Theme toggle button (fixed, always visible) ────────────────────────── */
+.theme-toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 9999;
+  padding: 8px 16px;
+  background: var(--bg-card);
+  color: var(--text-dark);
+  border: 2px solid var(--border-color);
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px var(--shadow-card);
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.theme-toggle:hover {
+  border-color: var(--mexican-green);
+  color: var(--mexican-green);
 }
 
 * {
@@ -23,8 +75,10 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, var(--mexican-white) 0%, #f5f5f5 100%);
+  background: var(--bg-page);
+  color: var(--text-primary);
   min-height: 100vh;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 .app {
@@ -256,10 +310,10 @@ body {
 }
 
 .rsvp-form-section {
-  background: var(--mexican-white);
+  background: var(--bg-card);
   padding: 40px;
   border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px var(--shadow-card);
   border: 3px solid var(--mexican-green);
 }
 
@@ -295,7 +349,7 @@ body {
   border-radius: 8px;
   outline: none;
   transition: all 0.3s ease;
-  background: var(--mexican-white);
+  background: var(--bg-input);
   color: var(--text-dark);
 }
 
@@ -364,7 +418,7 @@ body {
   border-radius: 8px;
   outline: none;
   transition: all 0.3s ease;
-  background: var(--mexican-white);
+  background: var(--bg-card);
   color: var(--text-dark);
   flex: 1;
 }
@@ -470,7 +524,7 @@ body {
 
 /* Attendee List Styles */
 .attendee-list-section {
-  background: var(--mexican-white);
+  background: var(--bg-card);
   padding: 40px;
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -504,7 +558,7 @@ body {
 .attendee-table {
   width: 100%;
   border-collapse: collapse;
-  background: var(--mexican-white);
+  background: var(--bg-card);
   border-radius: 12px;
   overflow: hidden;
 }
@@ -557,7 +611,7 @@ body {
 }
 
 .attendance-yes::before {
-  content: "✓";
+  content: "âœ“";
   font-size: 20px;
   font-weight: bold;
 }
@@ -571,7 +625,7 @@ body {
 }
 
 .attendance-no::before {
-  content: "✗";
+  content: "âœ—";
   font-size: 18px;
   font-weight: bold;
 }
@@ -595,7 +649,7 @@ body {
 }
 
 .dish-yes::before {
-  content: "✓";
+  content: "âœ“";
   font-size: 24px;
   font-weight: bold;
   color: var(--mexican-green);
@@ -721,7 +775,7 @@ body {
 .error-state {
   text-align: center;
   padding: 60px 20px;
-  background: var(--mexican-white);
+  background: var(--bg-card);
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   margin: 40px auto;
@@ -796,7 +850,7 @@ body {
 
 .create-button {
   padding: 10px 20px;
-  background: var(--mexican-white);
+  background: var(--bg-card);
   color: var(--mexican-green);
   border: none;
   border-radius: 8px;
@@ -854,7 +908,7 @@ body {
 }
 
 .event-card {
-  background: var(--mexican-white);
+  background: var(--bg-card);
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
@@ -952,7 +1006,7 @@ body {
 
 /* Event Form */
 .event-form-container {
-  background: var(--mexican-white);
+  background: var(--bg-card);
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   padding: 30px;
@@ -1081,7 +1135,7 @@ body {
 
 .view-toggle-button {
   padding: 10px 16px;
-  background: var(--mexican-white);
+  background: var(--bg-card);
   color: var(--mexican-green);
   border: 2px solid var(--mexican-green);
   font-size: 20px;
@@ -1129,7 +1183,7 @@ body {
 }
 
 .event-selection-card {
-  background: var(--mexican-white);
+  background: var(--bg-card);
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   padding: 25px;
@@ -1204,7 +1258,7 @@ body {
 .event-selection-table {
   width: 100%;
   border-collapse: collapse;
-  background: var(--mexican-white);
+  background: var(--bg-card);
   border-radius: 12px;
   overflow: hidden;
 }
@@ -1350,7 +1404,7 @@ body {
 
 /* Poll Styles */
 .polls-section {
-  background: var(--mexican-white);
+  background: var(--bg-card);
   padding: 40px;
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -1409,7 +1463,7 @@ body {
   align-items: center;
   gap: 12px;
   padding: 15px;
-  background: var(--mexican-white);
+  background: var(--bg-card);
   border: 2px solid var(--border-color);
   border-radius: 8px;
   cursor: pointer;
@@ -1568,7 +1622,7 @@ body {
 }
 
 .poll-list-container {
-  background: var(--mexican-white);
+  background: var(--bg-card);
   padding: 40px;
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -1661,7 +1715,7 @@ body {
   font-size: 16px;
   color: var(--text-dark);
   padding: 8px 12px;
-  background: var(--mexican-white);
+  background: var(--bg-card);
   border-left: 3px solid var(--mexican-orange);
   border-radius: 4px;
 }
@@ -1705,7 +1759,7 @@ body {
 }
 
 .poll-form-container {
-  background: var(--mexican-white);
+  background: var(--bg-card);
   padding: 40px;
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -1739,7 +1793,7 @@ body {
   border-radius: 8px;
   outline: none;
   transition: all 0.3s ease;
-  background: var(--mexican-white);
+  background: var(--bg-card);
   color: var(--text-dark);
 }
 
@@ -1824,7 +1878,7 @@ body {
   }
 }
 
-/* ── Invite Share (public event page) ─────────────────────────────────────── */
+/* â”€â”€ Invite Share (public event page) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .invite-share-section {
   display: flex;
@@ -1853,7 +1907,7 @@ body {
 
 .invite-share-panel {
   width: 100%;
-  background: var(--mexican-white);
+  background: var(--bg-card);
   border: 3px solid var(--mexican-orange);
   border-radius: 15px;
   padding: 30px;
@@ -1981,7 +2035,7 @@ body {
   padding: 12px 16px;
   border: 2px solid var(--mexican-orange);
   border-radius: 8px;
-  background: #fff8f0;
+  background: var(--bg-input);
   color: var(--text-dark);
   outline: none;
   font-family: monospace;
@@ -2028,11 +2082,11 @@ body {
   background: rgba(230, 126, 34, 0.08);
 }
 
-/* ── Invite List (admin panel) ────────────────────────────────────────────── */
+/* â”€â”€ Invite List (admin panel) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .invite-list-panel {
   margin-top: 30px;
-  background: var(--mexican-white);
+  background: var(--bg-card);
   border: 2px solid var(--mexican-orange);
   border-radius: 12px;
   padding: 25px;
@@ -2240,7 +2294,7 @@ body {
   }
 }
 
-/* ── Required field star ─────────────────────────────────────────────────── */
+/* â”€â”€ Required field star â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .required-star {
   color: var(--mexican-red);
@@ -2248,7 +2302,7 @@ body {
   margin-left: 2px;
 }
 
-/* ── Admin toggle (allow time proposal) ──────────────────────────────────── */
+/* â”€â”€ Admin toggle (allow time proposal) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .toggle-label {
   display: flex;
@@ -2282,7 +2336,7 @@ body {
   line-height: 1.4;
 }
 
-/* ── Attendance radio buttons ─────────────────────────────────────────────── */
+/* â”€â”€ Attendance radio buttons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .radio-group-label {
   font-size: 16px;
@@ -2310,7 +2364,7 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   user-select: none;
-  background: var(--mexican-white);
+  background: var(--bg-card);
   color: var(--text-dark);
 }
 
@@ -2322,7 +2376,7 @@ body {
   border-color: #aaa;
 }
 
-/* Yes — green when selected */
+/* Yes â€” green when selected */
 .radio-label.radio-yes.radio-selected {
   background: var(--mexican-green);
   border-color: var(--mexican-green);
@@ -2334,7 +2388,7 @@ body {
   color: var(--mexican-green);
 }
 
-/* No — red when selected */
+/* No â€” red when selected */
 .radio-label.radio-no.radio-selected {
   background: var(--mexican-red);
   border-color: var(--mexican-red);
@@ -2346,7 +2400,7 @@ body {
   color: var(--mexican-red);
 }
 
-/* ── Propose Time Modal ───────────────────────────────────────────────────── */
+/* â”€â”€ Propose Time Modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
 .modal-overlay {
   position: fixed;
@@ -2360,7 +2414,7 @@ body {
 }
 
 .modal-box {
-  background: var(--mexican-white);
+  background: var(--bg-card);
   border-radius: 16px;
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.25);
   padding: 40px;
