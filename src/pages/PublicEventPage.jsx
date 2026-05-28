@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
+import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom'
 import RSVPForm from '../components/RSVPForm'
 import AttendeeList from '../components/AttendeeList'
 import PollDisplay from '../components/PollDisplay'
@@ -10,17 +10,24 @@ function PublicEventPage() {
   const { eventId: eventIdParam } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
+  const location = useLocation()
   const [event, setEvent] = useState(null)
   const [eventId, setEventId] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [showAttendees, setShowAttendees] = useState(false)
+  // Name pre-filled from invite — set via router state (InvitePage redirect) or ?invite= query
+  const [inviteeName, setInviteeName] = useState(location.state?.inviteeName || '')
 
-  // Silently mark invite as viewed when someone arrives via a shared link
+  // Mark invite as viewed and pre-fill name when arriving via ?invite=TOKEN
   useEffect(() => {
     const inviteToken = searchParams.get('invite')
     if (inviteToken) {
-      viewInvite(inviteToken).catch(() => {})
+      viewInvite(inviteToken)
+        .then((invite) => {
+          if (invite.name) setInviteeName(invite.name)
+        })
+        .catch(() => {})
       // Remove the token from the URL so refreshing / sharing the URL further
       // doesn't re-trigger a duplicate view event
       setSearchParams({}, { replace: true })
@@ -137,7 +144,7 @@ function PublicEventPage() {
       </header>
 
       <main className="app-main">
-        <RSVPForm eventId={eventId} onRSVPSuccess={handleRSVPSuccess} allowTimeProposal={event?.allowTimeProposal ?? false} />
+        <RSVPForm eventId={eventId} onRSVPSuccess={handleRSVPSuccess} allowTimeProposal={event?.allowTimeProposal ?? false} initialName={inviteeName} />
         <PollDisplay eventId={eventId} />
         <div className="attendees-toggle-section">
           <button
