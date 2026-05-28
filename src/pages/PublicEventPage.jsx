@@ -1,18 +1,31 @@
 import { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import RSVPForm from '../components/RSVPForm'
 import AttendeeList from '../components/AttendeeList'
 import PollDisplay from '../components/PollDisplay'
-import { getEvent } from '../services/api'
+import InviteShare from '../components/InviteShare'
+import { getEvent, viewInvite } from '../services/api'
 
 function PublicEventPage() {
   const { eventId: eventIdParam } = useParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   const [event, setEvent] = useState(null)
   const [eventId, setEventId] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [showAttendees, setShowAttendees] = useState(false)
+
+  // Silently mark invite as viewed when someone arrives via a shared link
+  useEffect(() => {
+    const inviteToken = searchParams.get('invite')
+    if (inviteToken) {
+      viewInvite(inviteToken).catch(() => {})
+      // Remove the token from the URL so refreshing / sharing the URL further
+      // doesn't re-trigger a duplicate view event
+      setSearchParams({}, { replace: true })
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -25,15 +38,14 @@ function PublicEventPage() {
       try {
         setLoading(true)
         setError('')
-        
-        // Validate eventId is a valid number
+
         const parsedEventId = parseInt(eventIdParam)
         if (isNaN(parsedEventId)) {
           setError('Invalid event ID. Please select an event from the list.')
           setLoading(false)
           return
         }
-        
+
         const eventData = await getEvent(parsedEventId)
         setEventId(parsedEventId)
         setEvent(eventData)
@@ -47,9 +59,7 @@ function PublicEventPage() {
     fetchEvent()
   }, [eventIdParam])
 
-  const handleRSVPSuccess = () => {
-    // RSVP was submitted successfully, AttendeeList will refresh automatically
-  }
+  const handleRSVPSuccess = () => {}
 
   const getGoogleMapsUrl = (address) => {
     if (!address) return '#'
@@ -109,19 +119,23 @@ function PublicEventPage() {
         {event.address && (
           <div className="event-address">
             <p className="address-label">Event Location:</p>
-            <a 
+            <a
               href={getGoogleMapsUrl(event.address)}
               target="_blank"
               rel="noopener noreferrer"
               className="address-link"
             >
-              <span className="address-text">📍 {event.address}</span>
+              <span className="address-text"> {event.address}</span>
               <span className="address-hint">Click to open in Google Maps →</span>
             </a>
           </div>
         )}
+        <br></br>
+        <div>
+          <InviteShare eventId={eventId} />
+        </div>
       </header>
-      
+
       <main className="app-main">
         <RSVPForm eventId={eventId} onRSVPSuccess={handleRSVPSuccess} />
         <PollDisplay eventId={eventId} />
@@ -140,4 +154,3 @@ function PublicEventPage() {
 }
 
 export default PublicEventPage
-
