@@ -138,23 +138,25 @@ function PublicEventPage() {
           <div className="event-address">
             <p className="address-label">Event Location:</p>
             <div className="address-row">
-              <a
-                href={getGoogleMapsUrl(event.address)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="address-link"
-              >
-                <span className="address-text">{event.address}</span>
-                <span className="address-hint">Click to open in Google Maps →</span>
-              </a>
-              <button
-                type="button"
-                className={`address-copy-button ${addressCopied ? 'address-copy-button--copied' : ''}`}
-                onClick={handleCopyAddress}
-                title="Copy address to clipboard"
-              >
-                {addressCopied ? '✓ Copied' : 'Copy'}
-              </button>
+              <div className="address-link-wrap">
+                <a
+                  href={getGoogleMapsUrl(event.address)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="address-link"
+                >
+                  <span className="address-text">{event.address}</span>
+                  <span className="address-hint">Click to open in Google Maps →</span>
+                </a>
+                <button
+                  type="button"
+                  className="address-copy-button"
+                  onClick={handleCopyAddress}
+                  title={addressCopied ? 'Copied!' : 'Copy address'}
+                >
+                  {addressCopied ? '✓' : '⧉'}
+                </button>
+              </div>
             </div>
           </div>
         )}
