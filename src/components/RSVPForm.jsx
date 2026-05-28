@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { submitRSVP } from '../services/api'
 import ProposeTimeModal from './ProposeTimeModal'
 
-function RSVPForm({ eventId, onRSVPSuccess }) {
+function RSVPForm({ eventId, onRSVPSuccess, allowTimeProposal = false }) {
   const [name, setName] = useState('')
   const [willAttend, setWillAttend] = useState(true)
   const [showModal, setShowModal] = useState(false)
@@ -42,13 +42,13 @@ function RSVPForm({ eventId, onRSVPSuccess }) {
       return
     }
 
-    if (!willAttend) {
+    if (!willAttend && allowTimeProposal) {
       // Intercept — show modal to propose a time or decline
       setShowModal(true)
       return
     }
 
-    await doSubmit({ name: name.trim(), willAttend: true })
+    await doSubmit({ name: name.trim(), willAttend: willAttend })
   }
 
   const handlePropose = async (proposedTime) => {
@@ -68,7 +68,7 @@ function RSVPForm({ eventId, onRSVPSuccess }) {
       <h2>RSVP Here</h2>
       <form onSubmit={handleSubmit} className="rsvp-form">
         <div className="form-group">
-          <label htmlFor="name">Your Name</label>
+          <label htmlFor="name">Your Name <span className="required-star">*</span></label>
           <input
             type="text"
             id="name"
@@ -84,7 +84,7 @@ function RSVPForm({ eventId, onRSVPSuccess }) {
         </div>
 
         <div className="form-group">
-          <label className="radio-group-label">Will you attend?</label>
+          <label className="radio-group-label">Will you attend? <span className="required-star">*</span></label>
           <div className="radio-group">
             <label className={`radio-label radio-yes ${willAttend ? 'radio-selected' : ''}`}>
               <input

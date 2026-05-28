@@ -2173,6 +2173,48 @@ body {
   }
 }
 
+/* ── Required field star ─────────────────────────────────────────────────── */
+
+.required-star {
+  color: var(--mexican-red);
+  font-weight: 700;
+  margin-left: 2px;
+}
+
+/* ── Admin toggle (allow time proposal) ──────────────────────────────────── */
+
+.toggle-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.toggle-checkbox {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--mexican-green);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.toggle-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-dark);
+  line-height: 1.4;
+}
+
+.toggle-hint {
+  font-size: 13px;
+  color: #888;
+  margin-top: 6px;
+  margin-left: 28px;
+  font-style: italic;
+  line-height: 1.4;
+}
+
 /* ── Attendance radio buttons ─────────────────────────────────────────────── */
 
 .radio-group-label {
