@@ -1,12 +1,31 @@
 import { useState } from 'react'
 import { submitRSVP } from '../services/api'
+import ProposeTimeModal from './ProposeTimeModal'
 
 function RSVPForm({ eventId, onRSVPSuccess }) {
   const [name, setName] = useState('')
   const [willAttend, setWillAttend] = useState(true)
+  const [showModal, setShowModal] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
+
+  const doSubmit = async (rsvpData) => {
+    try {
+      setLoading(true)
+      await submitRSVP(eventId, rsvpData)
+      setSuccess(true)
+      setName('')
+      setWillAttend(true)
+      if (onRSVPSuccess) onRSVPSuccess()
+      setTimeout(() => setSuccess(false), 3000)
+    } catch (err) {
+      console.error('Error submitting RSVP:', err)
+      setError(err.response?.data?.message || 'Failed to submit RSVP. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -18,42 +37,28 @@ function RSVPForm({ eventId, onRSVPSuccess }) {
       return
     }
 
-    if (!eventId) {
-      setError('Event ID is missing. Please refresh the page and try again.')
-      return
-    }
-    
-    // Validate eventId is a valid number
-    if (isNaN(parseInt(eventId))) {
-      setError('Invalid event ID. Please select an event from the list.')
+    if (!eventId || isNaN(parseInt(eventId))) {
+      setError('Event ID is missing or invalid. Please refresh the page and try again.')
       return
     }
 
-    try {
-      setLoading(true)
-      const rsvpData = {
-        name: name.trim(),
-        willAttend: willAttend
-      }
-
-      await submitRSVP(eventId, rsvpData)
-      
-      setSuccess(true)
-      setName('')
-      setWillAttend(true)
-      
-      if (onRSVPSuccess) {
-        onRSVPSuccess()
-      }
-
-      // Clear success message after 3 seconds
-      setTimeout(() => setSuccess(false), 3000)
-    } catch (err) {
-      console.error('Error submitting RSVP:', err)
-        setError(err.response?.data?.message || 'Failed to submit RSVP. Please try again.')
-    } finally {
-      setLoading(false)
+    if (!willAttend) {
+      // Intercept — show modal to propose a time or decline
+      setShowModal(true)
+      return
     }
+
+    await doSubmit({ name: name.trim(), willAttend: true })
+  }
+
+  const handlePropose = async (proposedTime) => {
+    setShowModal(false)
+    await doSubmit({ name: name.trim(), willAttend: false, proposedTime })
+  }
+
+  const handleDecline = async () => {
+    setShowModal(false)
+    await doSubmit({ name: name.trim(), willAttend: false, proposedTime: null })
   }
 
   const isFormValid = name.trim()
@@ -78,32 +83,53 @@ function RSVPForm({ eventId, onRSVPSuccess }) {
           />
         </div>
 
-        <div className="form-group checkbox-group">
-          <label className="checkbox-label">
-            <input
-              type="checkbox"
-              checked={willAttend}
-              onChange={(e) => setWillAttend(e.target.checked)}
-              className="dish-checkbox"
-            />
-            <span>I will attend</span>
-          </label>
+        <div className="form-group">
+          <label className="radio-group-label">Will you attend?</label>
+          <div className="radio-group">
+            <label className={`radio-label radio-yes ${willAttend ? 'radio-selected' : ''}`}>
+              <input
+                type="radio"
+                name="attendance"
+                value="yes"
+                checked={willAttend === true}
+                onChange={() => setWillAttend(true)}
+              />
+              Yes
+            </label>
+            <label className={`radio-label radio-no ${!willAttend ? 'radio-selected' : ''}`}>
+              <input
+                type="radio"
+                name="attendance"
+                value="no"
+                checked={willAttend === false}
+                onChange={() => setWillAttend(false)}
+              />
+              No
+            </label>
+          </div>
         </div>
 
         {error && <div className="error-message">{error}</div>}
         {success && <div className="success-message">RSVP submitted successfully!</div>}
 
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className="submit-button"
           disabled={!isFormValid || loading}
         >
           {loading ? 'Submitting...' : 'Submit RSVP'}
         </button>
       </form>
+
+      {showModal && (
+        <ProposeTimeModal
+          name={name.trim()}
+          onPropose={handlePropose}
+          onDecline={handleDecline}
+        />
+      )}
     </section>
   )
 }
 
 export default RSVPForm
-
