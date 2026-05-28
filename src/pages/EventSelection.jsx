@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getEvents } from '../services/api'
+import { formatEventDate } from '../utils/dateFormat'
 
 function EventSelection() {
   const [events, setEvents] = useState([])
@@ -104,7 +105,7 @@ function EventSelection() {
                       <td className="event-table-title">{event.title || 'Untitled Event'}</td>
                       <td className="event-table-description">{event.description || '-'}</td>
                       <td className="event-table-date">
-                        {event.eventDateTime ? new Date(event.eventDateTime).toLocaleString() : '-'}
+                        {event.eventDateTime ? formatEventDate(event.eventDateTime) : '-'}
                       </td>
                       <td className="event-table-address">{event.address || '-'}</td>
                       <td className="event-table-action">
@@ -140,7 +141,7 @@ function EventSelection() {
                   )}
                   {event.eventDateTime && (
                     <p className="event-selection-date">
-                      {new Date(event.eventDateTime).toLocaleString()}
+                      {formatEventDate(event.eventDateTime)}
                     </p>
                   )}
                   <button className="event-selection-button">RSVP Now →</button>
