@@ -2172,3 +2172,247 @@ body {
     padding: 10px 10px;
   }
 }
+
+/* ── Required field star ─────────────────────────────────────────────────── */
+
+.required-star {
+  color: var(--mexican-red);
+  font-weight: 700;
+  margin-left: 2px;
+}
+
+/* ── Admin toggle (allow time proposal) ──────────────────────────────────── */
+
+.toggle-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.toggle-checkbox {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--mexican-green);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.toggle-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-dark);
+  line-height: 1.4;
+}
+
+.toggle-hint {
+  font-size: 13px;
+  color: #888;
+  margin-top: 6px;
+  margin-left: 28px;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+/* ── Attendance radio buttons ─────────────────────────────────────────────── */
+
+.radio-group-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 4px;
+  display: block;
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 28px;
+  border-radius: 8px;
+  border: 2px solid var(--border-color);
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  background: var(--mexican-white);
+  color: var(--text-dark);
+}
+
+.radio-label input[type="radio"] {
+  display: none;
+}
+
+.radio-label:hover {
+  border-color: #aaa;
+}
+
+/* Yes — green when selected */
+.radio-label.radio-yes.radio-selected {
+  background: var(--mexican-green);
+  border-color: var(--mexican-green);
+  color: var(--mexican-white);
+}
+
+.radio-label.radio-yes:not(.radio-selected):hover {
+  border-color: var(--mexican-green);
+  color: var(--mexican-green);
+}
+
+/* No — red when selected */
+.radio-label.radio-no.radio-selected {
+  background: var(--mexican-red);
+  border-color: var(--mexican-red);
+  color: var(--mexican-white);
+}
+
+.radio-label.radio-no:not(.radio-selected):hover {
+  border-color: var(--mexican-red);
+  color: var(--mexican-red);
+}
+
+/* ── Propose Time Modal ───────────────────────────────────────────────────── */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-box {
+  background: var(--mexican-white);
+  border-radius: 16px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.25);
+  padding: 40px;
+  max-width: 480px;
+  width: 100%;
+}
+
+.modal-title {
+  font-size: 26px;
+  color: var(--mexican-green);
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.modal-subtitle {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 28px;
+  line-height: 1.5;
+}
+
+.modal-datetime-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 32px;
+}
+
+.modal-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.modal-label-optional {
+  font-weight: 400;
+  color: #888;
+}
+
+.modal-datetime-input {
+  padding: 12px 16px;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: inherit;
+  transition: border-color 0.3s ease;
+  width: 100%;
+}
+
+.modal-datetime-input:focus {
+  outline: none;
+  border-color: var(--mexican-green);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 14px;
+}
+
+.modal-propose-button {
+  flex: 1;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, var(--mexican-green) 0%, var(--mexican-green-light) 100%);
+  color: var(--mexican-white);
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 104, 71, 0.3);
+}
+
+.modal-propose-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 104, 71, 0.4);
+}
+
+.modal-decline-button {
+  flex: 1;
+  padding: 14px 20px;
+  background: var(--mexican-red);
+  color: var(--mexican-white);
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(206, 17, 38, 0.3);
+}
+
+.modal-decline-button:hover {
+  background: var(--mexican-red-light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(206, 17, 38, 0.4);
+}
+
+@media (max-width: 480px) {
+  .modal-box {
+    padding: 28px 20px;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+  }
+
+  .radio-group {
+    gap: 10px;
+  }
+
+  .radio-label {
+    padding: 10px 18px;
+  }
+}
+
+.proposed-time-note {
+  font-size: 13px;
+  color: var(--mexican-orange);
+  font-weight: 500;
+  margin-top: 4px;
+}

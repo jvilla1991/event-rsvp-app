@@ -83,7 +83,14 @@ function AttendeeList({ eventId }) {
           <tbody>
             {rsvps.map((rsvp) => (
               <tr key={rsvp.id}>
-                <td className="attendee-name-cell">{rsvp.name}</td>
+                <td className="attendee-name-cell">
+                  {rsvp.name}
+                  {!rsvp.willAttend && rsvp.proposedTime && (
+                    <div className="proposed-time-note">
+                      Suggests: {new Date(rsvp.proposedTime).toLocaleString()}
+                    </div>
+                  )}
+                </td>
                 <td className="attendance-status-cell">
                   {rsvp.willAttend ? (
                     <span className="attendance-yes">Attending</span>
