@@ -621,7 +621,7 @@ body {
 }
 
 .attendance-yes::before {
-  content: "âœ“";
+  content: “\2713”; /* ✓ CHECK MARK */
   font-size: 20px;
   font-weight: bold;
 }
@@ -635,7 +635,7 @@ body {
 }
 
 .attendance-no::before {
-  content: "âœ—";
+  content: "\2717"; /* ✗ BALLOT X */
   font-size: 18px;
   font-weight: bold;
 }
@@ -659,7 +659,7 @@ body {
 }
 
 .dish-yes::before {
-  content: "âœ“";
+  content: “\2713”; /* ✓ CHECK MARK */
   font-size: 24px;
   font-weight: bold;
   color: var(--mexican-green);
