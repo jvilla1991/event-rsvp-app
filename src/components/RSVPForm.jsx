@@ -1,9 +1,14 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { submitRSVP } from '../services/api'
 import ProposeTimeModal from './ProposeTimeModal'
 
 function RSVPForm({ eventId, onRSVPSuccess, allowTimeProposal = false, initialName = '' }) {
   const [name, setName] = useState(initialName)
+
+  // Sync when initialName arrives asynchronously (e.g. ?invite= token resolved after mount)
+  useEffect(() => {
+    if (initialName) setName(initialName)
+  }, [initialName])
   const [willAttend, setWillAttend] = useState(true)
   const [showModal, setShowModal] = useState(false)
   const [error, setError] = useState('')
