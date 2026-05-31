@@ -21,6 +21,9 @@ function PublicEventPage() {
   // Name pre-filled from invite — set via router state (InvitePage redirect) or ?invite= query
   const [inviteeName, setInviteeName] = useState(location.state?.inviteeName || '')
 
+  // Detect whether the user arrived from the admin dashboard
+  const fromAdmin = location.state?.fromAdmin === true
+
   // Mark invite as viewed and pre-fill name when arriving via ?invite=TOKEN
   useEffect(() => {
     const inviteToken = searchParams.get('invite')
@@ -118,15 +121,24 @@ function PublicEventPage() {
   return (
     <div className="app">
       <header className="app-header">
-        <div className="header-title-row">
-          <button
-            onClick={() => navigate('/')}
-            className="view-all-events-button"
-          >
-            ← View All Events
-          </button>
-          <h1>{event.title || 'Event RSVP'}</h1>
+        <div className="header-nav">
+          {fromAdmin ? (
+            <button
+              onClick={() => navigate('/admin/dashboard')}
+              className="back-nav-button"
+            >
+              ← Back to Dashboard
+            </button>
+          ) : (
+            <button
+              onClick={() => navigate('/')}
+              className="back-nav-button"
+            >
+              ← View All Events
+            </button>
+          )}
         </div>
+        <h1>{event.title || 'Event RSVP'}</h1>
         {event.description && (
           <p className="subtitle">{event.description}</p>
         )}

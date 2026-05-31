@@ -151,6 +151,16 @@ function EventSelection() {
           )}
         </div>
       </main>
+      <footer className="portfolio-footer">
+        <a
+          href="https://villa-dev.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="portfolio-link"
+        >
+          View Full Portfolio → villa-dev.com
+        </a>
+      </footer>
     </div>
   )
 }

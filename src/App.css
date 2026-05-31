@@ -111,16 +111,12 @@ body {
   box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3);
 }
 
-.header-title-row {
-  position: relative;
-  margin-bottom: 15px;
+.header-nav {
+  margin-bottom: 12px;
+  text-align: left;
 }
 
-.view-all-events-button {
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
+.back-nav-button {
   background: var(--mexican-orange);
   color: var(--mexican-white);
   font-size: 16px;
@@ -131,19 +127,18 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   white-space: nowrap;
-  z-index: 1;
   box-shadow: 0 2px 8px rgba(255, 140, 66, 0.3);
 }
 
-.view-all-events-button:hover {
+.back-nav-button:hover {
   background: var(--mexican-orange-light);
   border-color: var(--mexican-orange-light);
-  transform: translateY(-50%) translateY(-2px);
+  transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(255, 140, 66, 0.4);
 }
 
-.view-all-events-button:active {
-  transform: translateY(-50%);
+.back-nav-button:active {
+  transform: translateY(0);
 }
 
 .app-header h1 {
@@ -709,23 +704,9 @@ body {
     padding: 20px 15px;
   }
 
-  .view-all-events-button {
+  .back-nav-button {
     font-size: 14px;
     padding: 8px 16px;
-    position: relative;
-    left: auto;
-    top: auto;
-    transform: none;
-    margin-bottom: 15px;
-    display: block;
-  }
-
-  .view-all-events-button:hover {
-    transform: translateY(-2px);
-  }
-
-  .view-all-events-button:active {
-    transform: translateY(0);
   }
 
   .app-header h1 {
@@ -2547,3 +2528,24 @@ body {
   font-weight: 500;
   margin-top: 4px;
 }
+
+/* ── Portfolio footer ────────────────────────────────────────────────────── */
+.portfolio-footer {
+  margin-top: 40px;
+  text-align: center;
+  padding: 20px;
+}
+
+.portfolio-link {
+  font-size: 15px;
+  color: var(--text-subtle);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.portfolio-link:hover {
+  color: var(--mexican-orange);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
