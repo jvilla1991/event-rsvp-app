@@ -24,7 +24,7 @@ function AdminDashboard() {
   }
 
   const handleView = (eventId) => {
-    navigate(`/event/${eventId}`)
+    navigate(`/event/${eventId}`, { state: { fromAdmin: true } })
   }
 
   const handleCreate = () => {
