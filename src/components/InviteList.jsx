@@ -34,7 +34,7 @@ function InviteList({ eventId, eventTitle, onClose }) {
     }
   }
 
-  const viewedCount = invites.filter(i => i.isViewed).length
+  const viewedCount = invites.filter(i => i.status !== 'NotOpened').length
 
   return (
     <div className="invite-list-panel">
@@ -85,7 +85,7 @@ function InviteList({ eventId, eventTitle, onClose }) {
                       : <span className="invite-anonymous">Anonymous</span>}
                   </td>
                   <td>
-                    {invite.isViewed
+                    {invite.status !== 'NotOpened'
                       ? <span className="invite-badge invite-badge-viewed">✓ Opened</span>
                       : <span className="invite-badge invite-badge-pending">Not Opened</span>}
                   </td>
