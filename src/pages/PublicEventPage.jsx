@@ -181,7 +181,7 @@ function PublicEventPage() {
 
       <main className="app-main">
         <RSVPForm eventId={eventId} onRSVPSuccess={handleRSVPSuccess} allowTimeProposal={event?.allowTimeProposal ?? false} initialName={inviteeName} />
-        <PollDisplay eventId={eventId} />
+        <PollDisplay eventId={eventId} allowGuestPolls={event?.allowGuestPolls ?? false} />
         <div className="attendees-toggle-section">
           <button
             onClick={() => setShowAttendees(!showAttendees)}

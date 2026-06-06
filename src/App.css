@@ -1416,6 +1416,16 @@ body {
   border: 3px solid var(--mexican-orange);
 }
 
+.polls-empty-hint {
+  color: var(--text-subtle);
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.guest-poll-create {
+  margin-top: 24px;
+}
+
 .polls-section h2 {
   font-size: 32px;
   color: var(--mexican-orange);
