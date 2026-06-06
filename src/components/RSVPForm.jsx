@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react'
 import { submitRSVP } from '../services/api'
+import { getRememberedName, rememberName } from '../utils/rememberedName'
 import ProposeTimeModal from './ProposeTimeModal'
 
 function RSVPForm({ eventId, onRSVPSuccess, allowTimeProposal = false, initialName = '' }) {
-  const [name, setName] = useState(initialName)
+  // Pre-fill from an invite link if present, otherwise from a name this device
+  // remembered from a previous RSVP. The invite name always wins.
+  const [name, setName] = useState(initialName || getRememberedName())
 
   // Sync when initialName arrives asynchronously (e.g. ?invite= token resolved after mount)
   useEffect(() => {
@@ -19,6 +22,8 @@ function RSVPForm({ eventId, onRSVPSuccess, allowTimeProposal = false, initialNa
     try {
       setLoading(true)
       await submitRSVP(eventId, rsvpData)
+      // Remember this name on the device so future events pre-fill it.
+      rememberName(rsvpData.name)
       setSuccess(true)
       setName('')
       setStatus('Yes')
