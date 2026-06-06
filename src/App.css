@@ -635,6 +635,20 @@ body {
   font-weight: bold;
 }
 
+.attendance-maybe {
+  color: var(--mexican-orange);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.attendance-maybe::before {
+  content: "\003F"; /* ? QUESTION MARK */
+  font-size: 18px;
+  font-weight: bold;
+}
+
 .dish-status {
   font-size: 18px;
   font-weight: 500;
@@ -2389,6 +2403,18 @@ body {
 .radio-label.radio-no:not(.radio-selected):hover {
   border-color: var(--mexican-red);
   color: var(--mexican-red);
+}
+
+/* Maybe â€” orange when selected */
+.radio-label.radio-maybe.radio-selected {
+  background: var(--mexican-orange);
+  border-color: var(--mexican-orange);
+  color: var(--mexican-white);
+}
+
+.radio-label.radio-maybe:not(.radio-selected):hover {
+  border-color: var(--mexican-orange);
+  color: var(--mexican-orange);
 }
 
 /* â”€â”€ Propose Time Modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
