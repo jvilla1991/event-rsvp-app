@@ -85,16 +85,20 @@ function AttendeeList({ eventId }) {
               <tr key={rsvp.id}>
                 <td className="attendee-name-cell">
                   {rsvp.name}
-                  {!rsvp.willAttend && rsvp.proposedTime && (
+                  {rsvp.status !== 'Yes' && rsvp.proposedTime && (
                     <div className="proposed-time-note">
                       Suggests: {new Date(rsvp.proposedTime).toLocaleString()}
                     </div>
                   )}
                 </td>
                 <td className="attendance-status-cell">
-                  {rsvp.willAttend ? (
+                  {rsvp.status === 'Yes' && (
                     <span className="attendance-yes">Attending</span>
-                  ) : (
+                  )}
+                  {rsvp.status === 'Maybe' && (
+                    <span className="attendance-maybe">Maybe</span>
+                  )}
+                  {rsvp.status === 'No' && (
                     <span className="attendance-no">Not Attending</span>
                   )}
                 </td>

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-function ProposeTimeModal({ name, onPropose, onDecline }) {
+function ProposeTimeModal({ name, onPropose, onDecline, title, subtitle, showDecline = true }) {
   const [proposedTime, setProposedTime] = useState('')
 
   const handlePropose = () => {
@@ -12,11 +12,14 @@ function ProposeTimeModal({ name, onPropose, onDecline }) {
     onDecline()
   }
 
+  const resolvedTitle = title ?? `Can't make it${name ? `, ${name}` : ''}?`
+  const resolvedSubtitle = subtitle ?? 'Would you like to suggest a different time, or simply decline?'
+
   return (
     <div className="modal-overlay">
       <div className="modal-box">
-        <h3 className="modal-title">Can't make it{name ? `, ${name}` : ''}?</h3>
-        <p className="modal-subtitle">Would you like to suggest a different time, or simply decline?</p>
+        <h3 className="modal-title">{resolvedTitle}</h3>
+        <p className="modal-subtitle">{resolvedSubtitle}</p>
 
         <div className="modal-datetime-group">
           <label htmlFor="proposed-time" className="modal-label">
@@ -39,13 +42,15 @@ function ProposeTimeModal({ name, onPropose, onDecline }) {
           >
             {proposedTime ? 'Propose This Time' : 'Send Anyway'}
           </button>
-          <button
-            type="button"
-            className="modal-decline-button"
-            onClick={handleDecline}
-          >
-            Decline
-          </button>
+          {showDecline && (
+            <button
+              type="button"
+              className="modal-decline-button"
+              onClick={handleDecline}
+            >
+              Decline
+            </button>
+          )}
         </div>
       </div>
     </div>

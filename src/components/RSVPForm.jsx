@@ -9,7 +9,7 @@ function RSVPForm({ eventId, onRSVPSuccess, allowTimeProposal = false, initialNa
   useEffect(() => {
     if (initialName) setName(initialName)
   }, [initialName])
-  const [willAttend, setWillAttend] = useState(true)
+  const [status, setStatus] = useState('Yes')
   const [showModal, setShowModal] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -21,7 +21,7 @@ function RSVPForm({ eventId, onRSVPSuccess, allowTimeProposal = false, initialNa
       await submitRSVP(eventId, rsvpData)
       setSuccess(true)
       setName('')
-      setWillAttend(true)
+      setStatus('Yes')
       if (onRSVPSuccess) onRSVPSuccess()
       setTimeout(() => setSuccess(false), 3000)
     } catch (err) {
@@ -47,23 +47,25 @@ function RSVPForm({ eventId, onRSVPSuccess, allowTimeProposal = false, initialNa
       return
     }
 
-    if (!willAttend && allowTimeProposal) {
-      // Intercept — show modal to propose a time or decline
+    // "No" and "Maybe" can optionally suggest an alternative time when the event allows it.
+    if (status !== 'Yes' && allowTimeProposal) {
       setShowModal(true)
       return
     }
 
-    await doSubmit({ name: name.trim(), willAttend: willAttend })
+    await doSubmit({ name: name.trim(), status })
   }
 
+  // Keep the response the user picked (No or Maybe) and attach the suggested time.
   const handlePropose = async (proposedTime) => {
     setShowModal(false)
-    await doSubmit({ name: name.trim(), willAttend: false, proposedTime })
+    await doSubmit({ name: name.trim(), status, proposedTime })
   }
 
+  // Declining from the modal always records a definite "No".
   const handleDecline = async () => {
     setShowModal(false)
-    await doSubmit({ name: name.trim(), willAttend: false, proposedTime: null })
+    await doSubmit({ name: name.trim(), status: 'No', proposedTime: null })
   }
 
   const isFormValid = name.trim()
@@ -91,23 +93,33 @@ function RSVPForm({ eventId, onRSVPSuccess, allowTimeProposal = false, initialNa
         <div className="form-group">
           <label className="radio-group-label">Will you attend? <span className="required-star">*</span></label>
           <div className="radio-group">
-            <label className={`radio-label radio-yes ${willAttend ? 'radio-selected' : ''}`}>
+            <label className={`radio-label radio-yes ${status === 'Yes' ? 'radio-selected' : ''}`}>
               <input
                 type="radio"
                 name="attendance"
-                value="yes"
-                checked={willAttend === true}
-                onChange={() => setWillAttend(true)}
+                value="Yes"
+                checked={status === 'Yes'}
+                onChange={() => setStatus('Yes')}
               />
               Yes
             </label>
-            <label className={`radio-label radio-no ${!willAttend ? 'radio-selected' : ''}`}>
+            <label className={`radio-label radio-maybe ${status === 'Maybe' ? 'radio-selected' : ''}`}>
               <input
                 type="radio"
                 name="attendance"
-                value="no"
-                checked={willAttend === false}
-                onChange={() => setWillAttend(false)}
+                value="Maybe"
+                checked={status === 'Maybe'}
+                onChange={() => setStatus('Maybe')}
+              />
+              Maybe
+            </label>
+            <label className={`radio-label radio-no ${status === 'No' ? 'radio-selected' : ''}`}>
+              <input
+                type="radio"
+                name="attendance"
+                value="No"
+                checked={status === 'No'}
+                onChange={() => setStatus('No')}
               />
               No
             </label>
@@ -129,6 +141,13 @@ function RSVPForm({ eventId, onRSVPSuccess, allowTimeProposal = false, initialNa
       {showModal && (
         <ProposeTimeModal
           name={name.trim()}
+          title={status === 'Maybe'
+            ? `Not sure yet${name.trim() ? `, ${name.trim()}` : ''}?`
+            : undefined}
+          subtitle={status === 'Maybe'
+            ? 'Want to suggest a time that might work better for you?'
+            : undefined}
+          showDecline={status !== 'Maybe'}
           onPropose={handlePropose}
           onDecline={handleDecline}
         />
