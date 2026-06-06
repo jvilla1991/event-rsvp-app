@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'
-import { getEventRSVPs } from '../services/api'
+import { getEventAttendance } from '../services/api'
 
 function AttendeeList({ eventId }) {
-  const [rsvps, setRsvps] = useState([])
+  const [attendees, setAttendees] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
   useEffect(() => {
-    const fetchRSVPs = async () => {
+    const fetchAttendance = async () => {
       if (!eventId) {
         setLoading(false)
         return
@@ -24,16 +24,17 @@ function AttendeeList({ eventId }) {
       try {
         setLoading(true)
         setError('')
-        const data = await getEventRSVPs(parsedEventId)
-        setRsvps(data || [])
+        const data = await getEventAttendance(parsedEventId)
+        // Only show people we can name (skip anonymous invites with no name).
+        setAttendees((data || []).filter(a => a.name && a.name.trim()))
       } catch (err) {
-        console.error('Error fetching RSVPs:', err)
+        console.error('Error fetching attendance:', err)
       } finally {
         setLoading(false)
       }
     }
 
-    fetchRSVPs()
+    fetchAttendance()
   }, [eventId])
 
   if (loading) {
@@ -58,20 +59,34 @@ function AttendeeList({ eventId }) {
     )
   }
 
-  if (rsvps.length === 0) {
+  if (attendees.length === 0) {
     return (
       <section className="attendee-list-section">
         <h2>Attendees</h2>
         <div className="empty-state">
-          <p>No RSVPs yet. Be the first to RSVP!</p>
+          <p>No attendees yet. Be the first to RSVP!</p>
         </div>
       </section>
     )
   }
 
+  // An invited person who hasn't responded yet has no recorded response.
+  const renderStatus = (response) => {
+    switch (response) {
+      case 'Yes':
+        return <span className="attendance-yes">Attending</span>
+      case 'Maybe':
+        return <span className="attendance-maybe">Maybe</span>
+      case 'No':
+        return <span className="attendance-no">Not Attending</span>
+      default:
+        return <span className="attendance-tentative">Tentative</span>
+    }
+  }
+
   return (
     <section className="attendee-list-section">
-      <h2>Attendees ({rsvps.length})</h2>
+      <h2>Attendees ({attendees.length})</h2>
       <div className="attendee-table-container">
         <table className="attendee-table">
           <thead>
@@ -81,26 +96,18 @@ function AttendeeList({ eventId }) {
             </tr>
           </thead>
           <tbody>
-            {rsvps.map((rsvp) => (
-              <tr key={rsvp.id}>
+            {attendees.map((attendee) => (
+              <tr key={`${attendee.source}-${attendee.id}`}>
                 <td className="attendee-name-cell">
-                  {rsvp.name}
-                  {rsvp.status !== 'Yes' && rsvp.proposedTime && (
+                  {attendee.name}
+                  {attendee.response && attendee.response !== 'Yes' && attendee.proposedTime && (
                     <div className="proposed-time-note">
-                      Suggests: {new Date(rsvp.proposedTime).toLocaleString()}
+                      Suggests: {new Date(attendee.proposedTime).toLocaleString()}
                     </div>
                   )}
                 </td>
                 <td className="attendance-status-cell">
-                  {rsvp.status === 'Yes' && (
-                    <span className="attendance-yes">Attending</span>
-                  )}
-                  {rsvp.status === 'Maybe' && (
-                    <span className="attendance-maybe">Maybe</span>
-                  )}
-                  {rsvp.status === 'No' && (
-                    <span className="attendance-no">Not Attending</span>
-                  )}
+                  {renderStatus(attendee.response)}
                 </td>
               </tr>
             ))}
@@ -112,4 +119,3 @@ function AttendeeList({ eventId }) {
 }
 
 export default AttendeeList
-

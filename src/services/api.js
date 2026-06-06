@@ -78,6 +78,17 @@ export const getEventRSVPs = async (eventId) => {
   return response.data
 }
 
+// Unified attendance: invited people (Tentative until they respond) merged with RSVPs.
+export const getEventAttendance = async (eventId) => {
+  const parsedEventId = parseInt(eventId)
+  if (isNaN(parsedEventId)) {
+    throw new Error('Invalid event ID')
+  }
+
+  const response = await api.get(`/api/events/${parsedEventId}/rsvps/attendance`)
+  return response.data
+}
+
 export const submitRSVP = async (eventId, rsvpData) => {
   const parsedEventId = parseInt(eventId)
   if (isNaN(parsedEventId)) {
