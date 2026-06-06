@@ -649,6 +649,21 @@ body {
   font-weight: bold;
 }
 
+.attendance-tentative {
+  color: var(--text-muted);
+  font-weight: 600;
+  font-style: italic;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.attendance-tentative::before {
+  content: "\2026"; /* … HORIZONTAL ELLIPSIS — awaiting response */
+  font-size: 18px;
+  font-weight: bold;
+}
+
 .dish-status {
   font-size: 18px;
   font-weight: 500;
