@@ -8,6 +8,7 @@ function EventForm({ event, onSubmit, onCancel, loading }) {
   const [eventDateTime, setEventDateTime] = useState('')
   const [description, setDescription] = useState('')
   const [allowTimeProposal, setAllowTimeProposal] = useState(false)
+  const [allowGuestPolls, setAllowGuestPolls] = useState(false)
   const [error, setError] = useState('')
   const [polls, setPolls] = useState([])
   const [newPolls, setNewPolls] = useState([]) // For polls created before event is saved
@@ -22,6 +23,7 @@ function EventForm({ event, onSubmit, onCancel, loading }) {
       setAddress(event.address || '')
       setDescription(event.description || '')
       setAllowTimeProposal(event.allowTimeProposal ?? false)
+      setAllowGuestPolls(event.allowGuestPolls ?? false)
       if (event.eventDateTime) {
         // Format datetime for input (YYYY-MM-DDTHH:mm)
         const date = new Date(event.eventDateTime)
@@ -44,6 +46,7 @@ function EventForm({ event, onSubmit, onCancel, loading }) {
       setEventDateTime('')
       setDescription('')
       setAllowTimeProposal(false)
+      setAllowGuestPolls(false)
       setPolls([])
       setNewPolls([])
     }
@@ -84,6 +87,7 @@ function EventForm({ event, onSubmit, onCancel, loading }) {
       description: description.trim() || null,
       eventDateTime: eventDateTime ? new Date(eventDateTime).toISOString() : null,
       allowTimeProposal,
+      allowGuestPolls,
     }
 
     // If creating new event with polls, pass polls data to be created after event
@@ -290,6 +294,24 @@ function EventForm({ event, onSubmit, onCancel, loading }) {
           </label>
           <p className="toggle-hint">
             When enabled, attendees who select "No" will be prompted with a modal to suggest a new time.
+          </p>
+        </div>
+
+        <div className="form-group">
+          <label className="toggle-label">
+            <input
+              type="checkbox"
+              checked={allowGuestPolls}
+              onChange={(e) => setAllowGuestPolls(e.target.checked)}
+              className="toggle-checkbox"
+              disabled={loading}
+            />
+            <span className="toggle-text">
+              Allow guests to create polls for this event
+            </span>
+          </label>
+          <p className="toggle-hint">
+            When enabled, anyone viewing the event page can add their own poll. You can still delete any poll.
           </p>
         </div>
 
