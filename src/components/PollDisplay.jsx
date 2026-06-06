@@ -1,48 +1,65 @@
-import { useState, useEffect } from 'react'
-import { getEventPolls, submitPollVote, getPollResults } from '../services/api'
+import { useState, useEffect, useCallback } from 'react'
+import { getEventPolls, submitPollVote, getPollResults, createPoll } from '../services/api'
+import PollForm from './PollForm'
 
-function PollDisplay({ eventId }) {
+function PollDisplay({ eventId, allowGuestPolls = false }) {
   const [polls, setPolls] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [votedPolls, setVotedPolls] = useState(new Set())
   const [pollResults, setPollResults] = useState({})
   const [showResults, setShowResults] = useState({})
+  const [showCreateForm, setShowCreateForm] = useState(false)
+  const [creating, setCreating] = useState(false)
 
-  useEffect(() => {
-    const fetchPolls = async () => {
-      if (!eventId) {
-        setLoading(false)
-        return
-      }
-
-      try {
-        setLoading(true)
-        setError('')
-        const data = await getEventPolls(eventId)
-        setPolls(data || [])
-        
-        // Load results for all polls
-        const results = {}
-        for (const poll of data || []) {
-          try {
-            const result = await getPollResults(eventId, poll.id)
-            results[poll.id] = result
-          } catch (err) {
-            console.error(`Error fetching results for poll ${poll.id}:`, err)
-          }
-        }
-        setPollResults(results)
-      } catch (err) {
-        console.error('Error fetching polls:', err)
-        setError(err.response?.data?.message || 'Failed to load polls')
-      } finally {
-        setLoading(false)
-      }
+  const loadPolls = useCallback(async () => {
+    if (!eventId) {
+      setLoading(false)
+      return
     }
 
-    fetchPolls()
+    try {
+      setLoading(true)
+      setError('')
+      const data = await getEventPolls(eventId)
+      setPolls(data || [])
+
+      // Load results for all polls
+      const results = {}
+      for (const poll of data || []) {
+        try {
+          const result = await getPollResults(eventId, poll.id)
+          results[poll.id] = result
+        } catch (err) {
+          console.error(`Error fetching results for poll ${poll.id}:`, err)
+        }
+      }
+      setPollResults(results)
+    } catch (err) {
+      console.error('Error fetching polls:', err)
+      setError(err.response?.data?.message || 'Failed to load polls')
+    } finally {
+      setLoading(false)
+    }
   }, [eventId])
+
+  useEffect(() => {
+    loadPolls()
+  }, [loadPolls])
+
+  const handleGuestCreatePoll = async (pollData) => {
+    try {
+      setCreating(true)
+      await createPoll(eventId, pollData)
+      setShowCreateForm(false)
+      await loadPolls()
+    } catch (err) {
+      console.error('Error creating poll:', err)
+      alert(err.response?.data?.error || err.response?.data?.message || 'Failed to create poll. Please try again.')
+    } finally {
+      setCreating(false)
+    }
+  }
 
   const handleVote = async (pollId, selectedOptions) => {
     if (!eventId) return
@@ -99,13 +116,19 @@ function PollDisplay({ eventId }) {
     )
   }
 
-  if (polls.length === 0) {
+  // Nothing to show: no polls and guests can't add any.
+  if (polls.length === 0 && !allowGuestPolls) {
     return null
   }
 
   return (
     <section className="polls-section">
       <h2>Event Polls</h2>
+
+      {polls.length === 0 && (
+        <p className="polls-empty-hint">No polls yet — be the first to create one!</p>
+      )}
+
       <div className="polls-list">
         {polls.map((poll) => {
           const hasVoted = votedPolls.has(poll.id)
@@ -125,6 +148,27 @@ function PollDisplay({ eventId }) {
           )
         })}
       </div>
+
+      {allowGuestPolls && (
+        <div className="guest-poll-create">
+          {showCreateForm ? (
+            <PollForm
+              eventId={eventId}
+              onSubmit={handleGuestCreatePoll}
+              onCancel={() => setShowCreateForm(false)}
+              loading={creating}
+            />
+          ) : (
+            <button
+              type="button"
+              className="create-poll-button"
+              onClick={() => setShowCreateForm(true)}
+            >
+              + Create a Poll
+            </button>
+          )}
+        </div>
+      )}
     </section>
   )
 }
