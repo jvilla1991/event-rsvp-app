@@ -6,12 +6,14 @@ import PollDisplay from '../components/PollDisplay'
 import InviteShare from '../components/InviteShare'
 import { getEvent, viewInvite } from '../services/api'
 import { formatEventDate } from '../utils/dateFormat'
+import { useAuth } from '../contexts/AuthContext'
 
 function PublicEventPage() {
   const { eventId: eventIdParam } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   const location = useLocation()
+  const { isAuthenticated } = useAuth()
   const [event, setEvent] = useState(null)
   const [eventId, setEventId] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -189,7 +191,7 @@ function PublicEventPage() {
           >
             {showAttendees ? 'Hide' : 'Show'} Attendees
           </button>
-          {showAttendees && <AttendeeList eventId={eventId} />}
+          {showAttendees && <AttendeeList eventId={eventId} isAdmin={isAuthenticated} />}
         </div>
       </main>
     </div>

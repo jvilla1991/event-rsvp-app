@@ -89,6 +89,23 @@ export const getEventAttendance = async (eventId) => {
   return response.data
 }
 
+// Admin-only: remove a person from the attendance list. The list merges tracked
+// invites and walk-in RSVPs, so `source` ("invite" or "rsvp") tells the API which
+// record backs the row being removed.
+export const deleteAttendee = async (eventId, source, id) => {
+  const parsedEventId = parseInt(eventId)
+  const parsedId = parseInt(id)
+  if (isNaN(parsedEventId) || isNaN(parsedId)) {
+    throw new Error('Invalid event ID or attendee ID')
+  }
+  if (source !== 'invite' && source !== 'rsvp') {
+    throw new Error('Invalid attendance source')
+  }
+
+  const response = await api.delete(`/api/events/${parsedEventId}/rsvps/attendance/${source}/${parsedId}`)
+  return response.data
+}
+
 export const submitRSVP = async (eventId, rsvpData) => {
   const parsedEventId = parseInt(eventId)
   if (isNaN(parsedEventId)) {
