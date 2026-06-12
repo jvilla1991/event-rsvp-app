@@ -2060,6 +2060,16 @@ body {
   transform: none;
 }
 
+/* After a successful generate+copy the button stays disabled but reads as a
+   success state (green, full opacity) rather than a greyed-out dead button. */
+.invite-generate-button.copied {
+  background: var(--mexican-green);
+  opacity: 1;
+  cursor: default;
+  transform: none;
+  box-shadow: 0 3px 8px rgba(0, 104, 71, 0.3);
+}
+
 .invite-error-text {
   color: var(--mexican-red);
   font-size: 15px;
@@ -2122,21 +2132,8 @@ body {
   transform: none;
 }
 
-.invite-another-button {
-  align-self: flex-start;
-  background: none;
-  border: 2px solid var(--mexican-orange);
-  color: var(--mexican-orange);
-  font-size: 15px;
-  font-weight: 600;
-  padding: 8px 18px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.invite-another-button:hover {
-  background: rgba(230, 126, 34, 0.08);
+.invite-link-label--copied {
+  color: var(--mexican-green);
 }
 
 /* â”€â”€ Invite List (admin panel) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
