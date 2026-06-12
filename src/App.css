@@ -607,6 +607,33 @@ body {
   font-size: 18px;
 }
 
+.attendee-actions-cell {
+  padding: 18px 24px;
+  text-align: right;
+}
+
+.attendee-remove-button {
+  background: none;
+  border: 1px solid var(--mexican-red);
+  color: var(--mexican-red);
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.attendee-remove-button:hover:not(:disabled) {
+  background: var(--mexican-red);
+  color: var(--mexican-white);
+}
+
+.attendee-remove-button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
 .attendance-yes {
   color: var(--mexican-green);
   font-weight: 600;

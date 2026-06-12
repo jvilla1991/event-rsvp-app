@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
-import { getEventAttendance } from '../services/api'
+import { getEventAttendance, deleteAttendee } from '../services/api'
 
-function AttendeeList({ eventId }) {
+function AttendeeList({ eventId, isAdmin = false }) {
   const [attendees, setAttendees] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [removingKey, setRemovingKey] = useState(null)
 
   useEffect(() => {
     const fetchAttendance = async () => {
@@ -70,6 +71,21 @@ function AttendeeList({ eventId }) {
     )
   }
 
+  const handleRemove = async (attendee) => {
+    const key = `${attendee.source}-${attendee.id}`
+    if (!window.confirm(`Remove ${attendee.name} from the attendance list?`)) return
+    try {
+      setRemovingKey(key)
+      await deleteAttendee(eventId, attendee.source, attendee.id)
+      setAttendees(prev => prev.filter(a => `${a.source}-${a.id}` !== key))
+    } catch (err) {
+      console.error('Error removing attendee:', err)
+      alert('Failed to remove attendee. Please try again.')
+    } finally {
+      setRemovingKey(null)
+    }
+  }
+
   // An invited person who hasn't responded yet has no recorded response.
   const renderStatus = (response) => {
     switch (response) {
@@ -93,24 +109,39 @@ function AttendeeList({ eventId }) {
             <tr>
               <th>Name</th>
               <th>Attendance Status</th>
+              {isAdmin && <th></th>}
             </tr>
           </thead>
           <tbody>
-            {attendees.map((attendee) => (
-              <tr key={`${attendee.source}-${attendee.id}`}>
-                <td className="attendee-name-cell">
-                  {attendee.name}
-                  {attendee.response && attendee.response !== 'Yes' && attendee.proposedTime && (
-                    <div className="proposed-time-note">
-                      Suggests: {new Date(attendee.proposedTime).toLocaleString()}
-                    </div>
+            {attendees.map((attendee) => {
+              const key = `${attendee.source}-${attendee.id}`
+              return (
+                <tr key={key}>
+                  <td className="attendee-name-cell">
+                    {attendee.name}
+                    {attendee.response && attendee.response !== 'Yes' && attendee.proposedTime && (
+                      <div className="proposed-time-note">
+                        Suggests: {new Date(attendee.proposedTime).toLocaleString()}
+                      </div>
+                    )}
+                  </td>
+                  <td className="attendance-status-cell">
+                    {renderStatus(attendee.response)}
+                  </td>
+                  {isAdmin && (
+                    <td className="attendee-actions-cell">
+                      <button
+                        className="attendee-remove-button"
+                        onClick={() => handleRemove(attendee)}
+                        disabled={removingKey === key}
+                      >
+                        {removingKey === key ? 'Removing…' : 'Remove'}
+                      </button>
+                    </td>
                   )}
-                </td>
-                <td className="attendance-status-cell">
-                  {renderStatus(attendee.response)}
-                </td>
-              </tr>
-            ))}
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       </div>
