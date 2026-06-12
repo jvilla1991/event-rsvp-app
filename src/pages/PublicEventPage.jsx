@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate, useSearchParams, useLocation } from 'react-router-dom'
 import RSVPForm from '../components/RSVPForm'
 import AttendeeList from '../components/AttendeeList'
@@ -20,6 +20,9 @@ function PublicEventPage() {
   const [error, setError] = useState('')
   const [showAttendees, setShowAttendees] = useState(false)
   const [addressCopied, setAddressCopied] = useState(false)
+  const [addressHolding, setAddressHolding] = useState(false)
+  const holdTimerRef = useRef(null)
+  const longPressFiredRef = useRef(false)
   // Name pre-filled from invite — set via router state (InvitePage redirect) or ?invite= query
   const [inviteeName, setInviteeName] = useState(location.state?.inviteeName || '')
 
@@ -80,13 +83,47 @@ function PublicEventPage() {
     return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`
   }
 
-  const handleCopyAddress = async () => {
+  // How long the user must hold the address before it copies (ms).
+  const HOLD_TO_COPY_MS = 500
+
+  const copyAddress = async () => {
     try {
       await navigator.clipboard.writeText(event.address)
       setAddressCopied(true)
+      if (typeof navigator.vibrate === 'function') navigator.vibrate(40) // haptic confirm on mobile
       setTimeout(() => setAddressCopied(false), 2000)
     } catch {
       // Clipboard API unavailable — silently ignore
+    }
+  }
+
+  // Desktop: the dedicated copy button.
+  const handleCopyAddress = () => copyAddress()
+
+  // Mobile: press-and-hold the address itself to copy (no separate button needed).
+  const startAddressHold = () => {
+    longPressFiredRef.current = false
+    setAddressHolding(true)
+    holdTimerRef.current = setTimeout(() => {
+      longPressFiredRef.current = true
+      setAddressHolding(false)
+      copyAddress()
+    }, HOLD_TO_COPY_MS)
+  }
+
+  const cancelAddressHold = () => {
+    setAddressHolding(false)
+    if (holdTimerRef.current) {
+      clearTimeout(holdTimerRef.current)
+      holdTimerRef.current = null
+    }
+  }
+
+  const handleAddressClick = (e) => {
+    // If a hold just copied the address, swallow the click so it doesn't also open Maps.
+    if (longPressFiredRef.current) {
+      e.preventDefault()
+      longPressFiredRef.current = false
     }
   }
 
@@ -158,10 +195,26 @@ function PublicEventPage() {
                   href={getGoogleMapsUrl(event.address)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="address-link"
+                  className={`address-link${addressHolding ? ' address-holding' : ''}${addressCopied ? ' address-copied' : ''}`}
+                  style={{ '--hold-ms': `${HOLD_TO_COPY_MS}ms` }}
+                  onPointerDown={startAddressHold}
+                  onPointerUp={cancelAddressHold}
+                  onPointerLeave={cancelAddressHold}
+                  onPointerCancel={cancelAddressHold}
+                  onClick={handleAddressClick}
+                  onContextMenu={(e) => e.preventDefault()}
                 >
                   <span className="address-text">{event.address}</span>
-                  <span className="address-hint">Click to open in Google Maps →</span>
+                  {addressCopied ? (
+                    <span className="address-hint address-hint--copied">✓ Address copied!</span>
+                  ) : addressHolding ? (
+                    <span className="address-hint address-hint--holding">Keep holding to copy…</span>
+                  ) : (
+                    <>
+                      <span className="address-hint address-hint--desktop">Click to open in Google Maps →</span>
+                      <span className="address-hint address-hint--touch">Press &amp; hold to copy · tap to open Maps</span>
+                    </>
+                  )}
                 </a>
                 <button
                   type="button"
