@@ -100,6 +100,27 @@ function AttendeeList({ eventId, isAdmin = false }) {
     }
   }
 
+  // Display order: Attending → Maybe → Not Attending → Tentative (no response yet).
+  const statusRank = (response) => {
+    switch (response) {
+      case 'Yes':
+        return 0
+      case 'Maybe':
+        return 1
+      case 'No':
+        return 2
+      default:
+        return 3 // Tentative — hasn't responded
+    }
+  }
+
+  // Sort a copy (never mutate state): by status group, then alphabetically by name.
+  const sortedAttendees = [...attendees].sort((a, b) => {
+    const rankDiff = statusRank(a.response) - statusRank(b.response)
+    if (rankDiff !== 0) return rankDiff
+    return (a.name || '').localeCompare(b.name || '', undefined, { sensitivity: 'base' })
+  })
+
   return (
     <section className="attendee-list-section">
       <h2>Attendees ({attendees.length})</h2>
@@ -113,7 +134,7 @@ function AttendeeList({ eventId, isAdmin = false }) {
             </tr>
           </thead>
           <tbody>
-            {attendees.map((attendee) => {
+            {sortedAttendees.map((attendee) => {
               const key = `${attendee.source}-${attendee.id}`
               return (
                 <tr key={key}>
