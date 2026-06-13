@@ -202,6 +202,8 @@ body {
 }
 
 .address-link {
+  position: relative;
+  overflow: hidden;
   display: inline-flex;
   flex-direction: column;
   align-items: center;
@@ -217,6 +219,10 @@ body {
   font-weight: 600;
   cursor: pointer;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  /* Stop the long-press from selecting the text / showing the iOS callout menu. */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .address-link:hover {
@@ -230,6 +236,30 @@ body {
   transform: translateY(-1px);
 }
 
+/* Hold-to-copy progress bar: fills left→right along the bottom while held. */
+.address-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 4px;
+  width: 0;
+  background: var(--mexican-white);
+  border-radius: 0 4px 4px 0;
+  transition: width 0s;
+}
+
+.address-link.address-holding::after {
+  width: 100%;
+  transition: width var(--hold-ms, 500ms) linear;
+}
+
+/* Brief green flash on the border when the copy lands. */
+.address-link.address-copied {
+  border-color: #5cb85c;
+  background: rgba(40, 167, 69, 0.3);
+}
+
 .address-text {
   font-size: 22px;
   font-weight: 700;
@@ -241,6 +271,31 @@ body {
   opacity: 0.9;
   text-decoration: underline;
   text-underline-offset: 4px;
+}
+
+/* The "press & hold" hint only makes sense on touch screens — hidden by default. */
+.address-hint--touch {
+  display: none;
+}
+
+.address-hint--holding,
+.address-hint--copied {
+  text-decoration: none;
+  font-weight: 700;
+}
+
+/* Touch devices: hold-to-copy is the primary gesture, so surface its hint and
+   drop the desktop-only affordances (the "click to open" line + the copy button). */
+@media (hover: none) and (pointer: coarse) {
+  .address-hint--desktop {
+    display: none;
+  }
+  .address-hint--touch {
+    display: inline;
+  }
+  .address-copy-button {
+    display: none;
+  }
 }
 
 .address-row {
