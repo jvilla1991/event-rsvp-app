@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { submitRSVP } from '../services/api'
 import { getRememberedName, rememberName } from '../utils/rememberedName'
 import ProposeTimeModal from './ProposeTimeModal'
-import AddToCalendarMenu from './AddToCalendarMenu'
+import AddToCalendarDrawer from './AddToCalendarDrawer'
 
 function RSVPForm({ eventId, event, onRSVPSuccess, allowTimeProposal = false, initialName = '' }) {
   // Pre-fill from an invite link if present, otherwise from a name this device
@@ -167,7 +167,12 @@ function RSVPForm({ eventId, event, onRSVPSuccess, allowTimeProposal = false, in
         />
       )}
 
-      {calendarEvent && <AddToCalendarMenu event={calendarEvent} />}
+      {calendarEvent && (
+        <AddToCalendarDrawer
+          event={calendarEvent}
+          onClose={() => setCalendarEvent(null)}
+        />
+      )}
     </section>
   )
 }
