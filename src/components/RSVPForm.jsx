@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react'
 import { submitRSVP } from '../services/api'
 import { getRememberedName, rememberName } from '../utils/rememberedName'
 import ProposeTimeModal from './ProposeTimeModal'
+import AddToCalendarMenu from './AddToCalendarMenu'
 
-function RSVPForm({ eventId, onRSVPSuccess, allowTimeProposal = false, initialName = '' }) {
+function RSVPForm({ eventId, event, onRSVPSuccess, allowTimeProposal = false, initialName = '' }) {
   // Pre-fill from an invite link if present, otherwise from a name this device
   // remembered from a previous RSVP. The invite name always wins.
   const [name, setName] = useState(initialName || getRememberedName())
@@ -17,6 +18,9 @@ function RSVPForm({ eventId, onRSVPSuccess, allowTimeProposal = false, initialNa
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
+  // Set after a successful "Yes" so we can offer an add-to-calendar option. Unlike the
+  // 3-second success toast, this persists so the user has time to tap it.
+  const [calendarEvent, setCalendarEvent] = useState(null)
 
   const doSubmit = async (rsvpData) => {
     try {
@@ -27,6 +31,10 @@ function RSVPForm({ eventId, onRSVPSuccess, allowTimeProposal = false, initialNa
       setSuccess(true)
       setName('')
       setStatus('Yes')
+      // Only offer the calendar on a "Yes" (check rsvpData, not the state we just reset).
+      if (rsvpData.status === 'Yes' && event?.eventDateTime) {
+        setCalendarEvent(event)
+      }
       if (onRSVPSuccess) onRSVPSuccess()
       setTimeout(() => setSuccess(false), 3000)
     } catch (err) {
@@ -41,6 +49,7 @@ function RSVPForm({ eventId, onRSVPSuccess, allowTimeProposal = false, initialNa
     e.preventDefault()
     setError('')
     setSuccess(false)
+    setCalendarEvent(null)
 
     if (!name.trim()) {
       setError('Please enter your name')
@@ -157,6 +166,8 @@ function RSVPForm({ eventId, onRSVPSuccess, allowTimeProposal = false, initialNa
           onDecline={handleDecline}
         />
       )}
+
+      {calendarEvent && <AddToCalendarMenu event={calendarEvent} />}
     </section>
   )
 }

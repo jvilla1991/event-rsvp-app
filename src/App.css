@@ -2679,3 +2679,50 @@ body {
   text-underline-offset: 3px;
 }
 
+/* ── Add to calendar (shown after a "Yes" RSVP) ─────────────────────────── */
+.add-to-calendar {
+  margin-top: 25px;
+  padding-top: 25px;
+  border-top: 2px dashed var(--border-color);
+  text-align: center;
+}
+
+.add-to-calendar-title {
+  margin: 0 0 15px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.add-to-calendar-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.add-to-calendar-button {
+  flex: 1 1 200px;
+  background: linear-gradient(135deg, var(--mexican-orange) 0%, var(--mexican-orange-light) 100%);
+  color: var(--mexican-white, #ffffff);
+  font-size: 16px;
+  font-weight: 700;
+  padding: 14px 24px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(230, 126, 34, 0.35);
+}
+
+.add-to-calendar-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(230, 126, 34, 0.45);
+}
+
+@media (max-width: 480px) {
+  .add-to-calendar-buttons {
+    flex-direction: column;
+  }
+}
+
