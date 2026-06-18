@@ -2455,6 +2455,24 @@ body {
   display: block;
 }
 
+/* "X of Y attending" capacity note above the RSVP radios */
+.attending-count {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted, #6b7280);
+  margin: 0 0 10px;
+}
+
+.attending-count--full {
+  color: var(--mexican-red);
+}
+
+/* A disabled "Yes" option once the event is full */
+.radio-label.radio-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .radio-group {
   display: flex;
   flex-direction: row;
