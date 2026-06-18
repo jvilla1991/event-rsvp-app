@@ -9,6 +9,7 @@ function EventForm({ event, onSubmit, onCancel, loading }) {
   const [description, setDescription] = useState('')
   const [allowTimeProposal, setAllowTimeProposal] = useState(false)
   const [allowGuestPolls, setAllowGuestPolls] = useState(false)
+  const [attendingLimit, setAttendingLimit] = useState('')
   const [error, setError] = useState('')
   const [polls, setPolls] = useState([])
   const [newPolls, setNewPolls] = useState([]) // For polls created before event is saved
@@ -24,6 +25,7 @@ function EventForm({ event, onSubmit, onCancel, loading }) {
       setDescription(event.description || '')
       setAllowTimeProposal(event.allowTimeProposal ?? false)
       setAllowGuestPolls(event.allowGuestPolls ?? false)
+      setAttendingLimit(event.attendingLimit != null ? String(event.attendingLimit) : '')
       if (event.eventDateTime) {
         // Format datetime for input (YYYY-MM-DDTHH:mm)
         const date = new Date(event.eventDateTime)
@@ -47,6 +49,7 @@ function EventForm({ event, onSubmit, onCancel, loading }) {
       setDescription('')
       setAllowTimeProposal(false)
       setAllowGuestPolls(false)
+      setAttendingLimit('')
       setPolls([])
       setNewPolls([])
     }
@@ -81,6 +84,16 @@ function EventForm({ event, onSubmit, onCancel, loading }) {
       return
     }
 
+    // Attending limit is optional; when set it must be a positive whole number.
+    let parsedLimit = null
+    if (attendingLimit !== '') {
+      parsedLimit = parseInt(attendingLimit, 10)
+      if (isNaN(parsedLimit) || parsedLimit < 1) {
+        setError('Attending limit must be a whole number of 1 or more (leave blank for no limit)')
+        return
+      }
+    }
+
     const eventData = {
       title: title.trim(),
       address: address.trim() || null,
@@ -88,6 +101,7 @@ function EventForm({ event, onSubmit, onCancel, loading }) {
       eventDateTime: eventDateTime ? new Date(eventDateTime).toISOString() : null,
       allowTimeProposal,
       allowGuestPolls,
+      attendingLimit: parsedLimit,
     }
 
     // If creating new event with polls, pass polls data to be created after event
@@ -275,6 +289,27 @@ function EventForm({ event, onSubmit, onCancel, loading }) {
             step="900"
             disabled={loading}
           />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="attendingLimit">Attending limit (max "Yes" RSVPs)</label>
+          <input
+            type="number"
+            id="attendingLimit"
+            min="1"
+            step="1"
+            value={attendingLimit}
+            onChange={(e) => {
+              setAttendingLimit(e.target.value)
+              setError('')
+            }}
+            placeholder="Leave blank for no limit"
+            disabled={loading}
+          />
+          <p className="toggle-hint">
+            When set, once this many people have RSVP'd "Yes" the option is disabled for everyone
+            else. Removing a "Yes" attendee frees a spot.
+          </p>
         </div>
 
         {error && <div className="error-message">{error}</div>}
