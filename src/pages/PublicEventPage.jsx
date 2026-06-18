@@ -76,7 +76,19 @@ function PublicEventPage() {
     fetchEvent()
   }, [eventIdParam])
 
-  const handleRSVPSuccess = () => {}
+  // Re-fetch the event so the attending count (and the Yes-disabled state) stays current
+  // after someone RSVPs or an admin removes an attendee.
+  const refreshEvent = async () => {
+    if (!eventId) return
+    try {
+      const eventData = await getEvent(eventId)
+      setEvent(eventData)
+    } catch (err) {
+      console.error('Error refreshing event:', err)
+    }
+  }
+
+  const handleRSVPSuccess = () => { refreshEvent() }
 
   const getGoogleMapsUrl = (address) => {
     if (!address) return '#'
@@ -235,7 +247,7 @@ function PublicEventPage() {
       </header>
 
       <main className="app-main">
-        <RSVPForm eventId={eventId} onRSVPSuccess={handleRSVPSuccess} allowTimeProposal={event?.allowTimeProposal ?? false} initialName={inviteeName} />
+        <RSVPForm eventId={eventId} event={event} onRSVPSuccess={handleRSVPSuccess} allowTimeProposal={event?.allowTimeProposal ?? false} initialName={inviteeName} />
         <PollDisplay eventId={eventId} allowGuestPolls={event?.allowGuestPolls ?? false} />
         <div className="attendees-toggle-section">
           <button
@@ -244,7 +256,7 @@ function PublicEventPage() {
           >
             {showAttendees ? 'Hide' : 'Show'} Attendees
           </button>
-          {showAttendees && <AttendeeList eventId={eventId} isAdmin={isAuthenticated} />}
+          {showAttendees && <AttendeeList eventId={eventId} isAdmin={isAuthenticated} onAttendeeRemoved={refreshEvent} />}
         </div>
       </main>
     </div>

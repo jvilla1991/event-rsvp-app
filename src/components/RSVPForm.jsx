@@ -3,7 +3,7 @@ import { submitRSVP } from '../services/api'
 import { getRememberedName, rememberName } from '../utils/rememberedName'
 import ProposeTimeModal from './ProposeTimeModal'
 
-function RSVPForm({ eventId, onRSVPSuccess, allowTimeProposal = false, initialName = '' }) {
+function RSVPForm({ eventId, event, onRSVPSuccess, allowTimeProposal = false, initialName = '' }) {
   // Pre-fill from an invite link if present, otherwise from a name this device
   // remembered from a previous RSVP. The invite name always wins.
   const [name, setName] = useState(initialName || getRememberedName())
@@ -13,6 +13,17 @@ function RSVPForm({ eventId, onRSVPSuccess, allowTimeProposal = false, initialNa
     if (initialName) setName(initialName)
   }, [initialName])
   const [status, setStatus] = useState('Yes')
+
+  // Capacity: only "Yes" responses count toward the limit. No limit => unlimited.
+  const hasLimit = event?.attendingLimit != null
+  const attendingCount = event?.attendingCount ?? 0
+  const isFull = hasLimit && attendingCount >= event.attendingLimit
+
+  // When the event is full, don't leave the form sitting on a now-disabled "Yes".
+  useEffect(() => {
+    if (isFull && status === 'Yes') setStatus('Maybe')
+  }, [isFull, status])
+
   const [showModal, setShowModal] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -31,7 +42,9 @@ function RSVPForm({ eventId, onRSVPSuccess, allowTimeProposal = false, initialNa
       setTimeout(() => setSuccess(false), 3000)
     } catch (err) {
       console.error('Error submitting RSVP:', err)
-      setError(err.response?.data?.message || 'Failed to submit RSVP. Please try again.')
+      // The API returns its message under `error` (e.g. "This event is full…"); fall back to
+      // `message` for any other shape, then to a generic string.
+      setError(err.response?.data?.error || err.response?.data?.message || 'Failed to submit RSVP. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -97,14 +110,22 @@ function RSVPForm({ eventId, onRSVPSuccess, allowTimeProposal = false, initialNa
 
         <div className="form-group">
           <label className="radio-group-label">Will you attend? <span className="required-star">*</span></label>
+          {hasLimit && (
+            <p className={`attending-count${isFull ? ' attending-count--full' : ''}`}>
+              {isFull
+                ? `This event is full (${attendingCount} of ${event.attendingLimit} attending)`
+                : `${attendingCount} of ${event.attendingLimit} attending`}
+            </p>
+          )}
           <div className="radio-group">
-            <label className={`radio-label radio-yes ${status === 'Yes' ? 'radio-selected' : ''}`}>
+            <label className={`radio-label radio-yes ${status === 'Yes' ? 'radio-selected' : ''} ${isFull ? 'radio-disabled' : ''}`}>
               <input
                 type="radio"
                 name="attendance"
                 value="Yes"
                 checked={status === 'Yes'}
                 onChange={() => setStatus('Yes')}
+                disabled={isFull}
               />
               Yes
             </label>

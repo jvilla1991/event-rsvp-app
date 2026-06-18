@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getEventAttendance, deleteAttendee } from '../services/api'
 
-function AttendeeList({ eventId, isAdmin = false }) {
+function AttendeeList({ eventId, isAdmin = false, onAttendeeRemoved }) {
   const [attendees, setAttendees] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -78,6 +78,8 @@ function AttendeeList({ eventId, isAdmin = false }) {
       setRemovingKey(key)
       await deleteAttendee(eventId, attendee.source, attendee.id)
       setAttendees(prev => prev.filter(a => `${a.source}-${a.id}` !== key))
+      // Let the parent refresh the event so a removed "Yes" frees a capacity spot.
+      if (onAttendeeRemoved) onAttendeeRemoved()
     } catch (err) {
       console.error('Error removing attendee:', err)
       alert('Failed to remove attendee. Please try again.')
