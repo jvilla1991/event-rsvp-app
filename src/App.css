@@ -2697,3 +2697,94 @@ body {
   text-underline-offset: 3px;
 }
 
+/* ── Add to calendar drawer (slides up after a "Yes" RSVP) ──────────────── */
+.calendar-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0);
+  transition: background 0.28s ease;
+}
+
+.calendar-drawer-overlay.open {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.calendar-drawer {
+  width: 100%;
+  max-width: 600px;
+  background: var(--bg-card);
+  border-radius: 22px 22px 0 0;
+  padding: 12px 24px calc(28px + env(safe-area-inset-bottom, 0px));
+  box-shadow: 0 -6px 24px var(--shadow-card);
+  transform: translateY(100%);
+  transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.calendar-drawer-overlay.open .calendar-drawer {
+  transform: translateY(0);
+}
+
+.calendar-drawer-handle {
+  width: 42px;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--border-color);
+  margin: 0 auto 18px;
+}
+
+.calendar-drawer-title {
+  margin: 0 0 20px;
+  text-align: center;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.calendar-drawer-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.calendar-drawer-button {
+  width: 100%;
+  background: linear-gradient(135deg, var(--mexican-orange) 0%, var(--mexican-orange-light) 100%);
+  color: var(--mexican-white, #ffffff);
+  font-size: 17px;
+  font-weight: 700;
+  padding: 16px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 10px rgba(230, 126, 34, 0.35);
+}
+
+.calendar-drawer-button:hover {
+  box-shadow: 0 6px 15px rgba(230, 126, 34, 0.45);
+}
+
+.calendar-drawer-button:active {
+  transform: scale(0.99);
+}
+
+.calendar-drawer-dismiss {
+  width: 100%;
+  margin-top: 14px;
+  background: transparent;
+  border: none;
+  color: var(--text-subtle);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.calendar-drawer-dismiss:hover {
+  color: var(--text-primary);
+}
+
