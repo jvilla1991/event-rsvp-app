@@ -662,6 +662,19 @@ body {
   font-size: 18px;
 }
 
+.attendee-detail-cell {
+  padding: 18px 24px;
+  font-size: 18px;
+  color: var(--text-primary);
+}
+
+.attendee-note {
+  font-size: 13px;
+  color: var(--text-subtle);
+  font-weight: 500;
+  margin-top: 4px;
+}
+
 .attendee-actions-cell {
   padding: 18px 24px;
   text-align: right;
@@ -857,7 +870,8 @@ body {
 
   .attendee-table th,
   .attendee-name-cell,
-  .attendance-status-cell {
+  .attendance-status-cell,
+  .attendee-detail-cell {
     padding: 14px 16px;
     font-size: 16px;
   }
