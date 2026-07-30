@@ -123,6 +123,10 @@ function AttendeeList({ eventId, isAdmin = false, onAttendeeRemoved }) {
     return (a.name || '').localeCompare(b.name || '', undefined, { sensitivity: 'base' })
   })
 
+  // Wedding-style events collect extra RSVP details; other events leave these null,
+  // so we only add the extra columns when at least one attendee has any of them.
+  const hasWeddingData = attendees.some(a => a.email || a.guestCount || a.mealChoice || a.note)
+
   return (
     <section className="attendee-list-section">
       <h2>Attendees ({attendees.length})</h2>
@@ -132,6 +136,13 @@ function AttendeeList({ eventId, isAdmin = false, onAttendeeRemoved }) {
             <tr>
               <th>Name</th>
               <th>Attendance Status</th>
+              {hasWeddingData && (
+                <>
+                  <th>Email</th>
+                  <th>Guests</th>
+                  <th>Meal</th>
+                </>
+              )}
               {isAdmin && <th></th>}
             </tr>
           </thead>
@@ -147,10 +158,28 @@ function AttendeeList({ eventId, isAdmin = false, onAttendeeRemoved }) {
                         Suggests: {new Date(attendee.proposedTime).toLocaleString()}
                       </div>
                     )}
+                    {attendee.note && (
+                      <div className="attendee-note">
+                        {attendee.note}
+                      </div>
+                    )}
                   </td>
                   <td className="attendance-status-cell">
                     {renderStatus(attendee.response)}
                   </td>
+                  {hasWeddingData && (
+                    <>
+                      <td className="attendee-detail-cell">
+                        {attendee.email || '—'}
+                      </td>
+                      <td className="attendee-detail-cell">
+                        {attendee.guestCount != null ? attendee.guestCount : '—'}
+                      </td>
+                      <td className="attendee-detail-cell">
+                        {attendee.mealChoice || '—'}
+                      </td>
+                    </>
+                  )}
                   {isAdmin && (
                     <td className="attendee-actions-cell">
                       <button
