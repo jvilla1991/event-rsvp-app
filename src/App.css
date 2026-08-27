@@ -2132,6 +2132,21 @@ body {
   font-weight: 500;
 }
 
+.invite-allow-guest {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.invite-allow-guest input {
+  width: auto;
+  margin: 0;
+  cursor: pointer;
+}
+
 /* Generated link result */
 .invite-link-result {
   display: flex;
