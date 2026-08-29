@@ -1,9 +1,25 @@
 import { useState } from 'react'
 import { createInvite } from '../services/api'
 
+// The wedding event's invites open the themed wedding website instead of the
+// generic event page. Configure these at build time (see .env.example); when
+// unset, every event keeps using the in-app event page.
+const WEDDING_URL = import.meta.env.VITE_WEDDING_URL || ''
+const WEDDING_EVENT_ID = import.meta.env.VITE_WEDDING_EVENT_ID || ''
+
+// Build the shareable link for an invite token. The wedding site is a single
+// page that reads ?invite=<token>; other events use /event/:id?invite=<token>.
+function buildInviteLink(eventId, token) {
+  if (WEDDING_URL && String(eventId) === String(WEDDING_EVENT_ID)) {
+    return `${WEDDING_URL.replace(/\/$/, '')}/?invite=${token}`
+  }
+  return `${window.location.origin}/event/${eventId}?invite=${token}`
+}
+
 function InviteShare({ eventId }) {
   const [open, setOpen] = useState(false)
   const [name, setName] = useState('')
+  const [allowGuest, setAllowGuest] = useState(false)
   const [loading, setLoading] = useState(false)
   const [inviteLink, setInviteLink] = useState('')
   const [generated, setGenerated] = useState(false) // a link exists for the current name
@@ -29,8 +45,8 @@ function InviteShare({ eventId }) {
     setError('')
     try {
       setLoading(true)
-      const invite = await createInvite(eventId, name.trim() || null)
-      const link = `${window.location.origin}/event/${eventId}?invite=${invite.token}`
+      const invite = await createInvite(eventId, name.trim() || null, allowGuest)
+      const link = buildInviteLink(eventId, invite.token)
       setInviteLink(link)
       setGenerated(true)
       await copyToClipboard(link)
@@ -41,9 +57,9 @@ function InviteShare({ eventId }) {
     }
   }
 
-  // Editing the name means a different person → re-arm the button for a fresh link.
-  const handleNameChange = (e) => {
-    setName(e.target.value)
+  // Any change that alters the resulting link (the person, or their +1 permission)
+  // re-arms the button so a fresh link is generated rather than reusing the last one.
+  const rearm = () => {
     if (generated || inviteLink) {
       setGenerated(false)
       setInviteLink('')
@@ -53,9 +69,21 @@ function InviteShare({ eventId }) {
     }
   }
 
+  // Editing the name means a different person → re-arm the button for a fresh link.
+  const handleNameChange = (e) => {
+    setName(e.target.value)
+    rearm()
+  }
+
+  const handleAllowGuestChange = (e) => {
+    setAllowGuest(e.target.checked)
+    rearm()
+  }
+
   const handleClose = () => {
     setOpen(false)
     setName('')
+    setAllowGuest(false)
     setInviteLink('')
     setGenerated(false)
     setCopied(false)
@@ -107,6 +135,14 @@ function InviteShare({ eventId }) {
                 {buttonLabel}
               </button>
             </div>
+            <label className="invite-allow-guest">
+              <input
+                type="checkbox"
+                checked={allowGuest}
+                onChange={handleAllowGuestChange}
+              />
+              <span>Allow this person to bring a +1</span>
+            </label>
             {error && <p className="invite-error-text">{error}</p>}
           </div>
 

@@ -204,10 +204,13 @@ export const getPollResults = async (eventId, pollId) => {
 }
 
 // Invite endpoints
-export const createInvite = async (eventId, name) => {
+export const createInvite = async (eventId, name, allowGuest = false) => {
   const parsedEventId = parseInt(eventId)
   if (isNaN(parsedEventId)) throw new Error('Invalid event ID')
-  const response = await api.post(`/api/events/${parsedEventId}/invites`, { name: name || null })
+  const response = await api.post(`/api/events/${parsedEventId}/invites`, {
+    name: name || null,
+    allowGuest: !!allowGuest,
+  })
   return response.data
 }
 
