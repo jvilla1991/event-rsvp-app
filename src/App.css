@@ -2677,6 +2677,75 @@ body {
   margin-top: 4px;
 }
 
+/* ── Bring a dish (potluck) ──────────────────────────────────────────────── */
+.dishes-group {
+  margin-top: 4px;
+}
+
+.dishes-optional {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.dish-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.dish-input {
+  flex: 1;
+  font-size: 16px;
+  padding: 12px 14px;
+  border: 2px solid var(--mexican-green);
+  border-radius: 8px;
+  outline: none;
+  transition: all 0.3s ease;
+  background: var(--bg-input);
+  color: var(--text-dark);
+}
+
+.dish-input:focus {
+  border-color: var(--mexican-red);
+  box-shadow: 0 0 0 4px rgba(206, 17, 38, 0.1);
+}
+
+.dish-input::placeholder {
+  color: var(--text-muted);
+}
+
+.dish-remove-button {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  font-size: 22px;
+  line-height: 1;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.dish-remove-button:hover {
+  color: var(--mexican-red);
+  background: rgba(206, 17, 38, 0.08);
+}
+
+.attendee-dishes {
+  font-size: 13px;
+  color: var(--text-subtle);
+  margin-top: 4px;
+}
+
+.attendee-dishes-label {
+  font-weight: 600;
+  color: var(--mexican-green);
+}
+
 /* ── Portfolio footer ────────────────────────────────────────────────────── */
 .portfolio-footer {
   margin-top: 40px;

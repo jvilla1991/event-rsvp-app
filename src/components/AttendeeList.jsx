@@ -147,6 +147,12 @@ function AttendeeList({ eventId, isAdmin = false, onAttendeeRemoved }) {
                         Suggests: {new Date(attendee.proposedTime).toLocaleString()}
                       </div>
                     )}
+                    {attendee.dishes && attendee.dishes.length > 0 && (
+                      <div className="attendee-dishes">
+                        <span className="attendee-dishes-label">Bringing:</span>{' '}
+                        {attendee.dishes.join(', ')}
+                      </div>
+                    )}
                   </td>
                   <td className="attendance-status-cell">
                     {renderStatus(attendee.response)}
