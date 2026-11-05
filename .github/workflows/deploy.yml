@@ -33,6 +33,10 @@ jobs:
       - name: Build
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          # Wedding invites open the themed wedding site instead of the in-app
+          # event page. Optional — leave unset to keep every event on /event/:id.
+          VITE_WEDDING_URL: ${{ secrets.VITE_WEDDING_URL }}
+          VITE_WEDDING_EVENT_ID: ${{ secrets.VITE_WEDDING_EVENT_ID }}
         run: npm run build
 
       - name: Configure AWS credentials (OIDC)
