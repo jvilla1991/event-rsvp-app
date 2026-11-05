@@ -15,6 +15,30 @@ function RSVPForm({ eventId, event, onRSVPSuccess, allowTimeProposal = false, in
   }, [initialName])
   const [status, setStatus] = useState('Yes')
 
+  // "Bring a dish" (potluck) events ask "Yes" responders what they're bringing.
+  // We keep one trailing empty input so a new line appears as soon as they type.
+  const isBringADish = event?.isBringADish ?? false
+  const [dishes, setDishes] = useState([''])
+
+  const handleDishChange = (index, value) => {
+    const next = [...dishes]
+    next[index] = value
+    // Grow the list: typing into the last box reveals a fresh empty one below it.
+    if (index === next.length - 1 && value.trim() !== '') {
+      next.push('')
+    }
+    setDishes(next)
+  }
+
+  const handleRemoveDish = (index) => {
+    const next = dishes.filter((_, i) => i !== index)
+    // Always leave a trailing empty input to type into.
+    if (next.length === 0 || next[next.length - 1].trim() !== '') {
+      next.push('')
+    }
+    setDishes(next)
+  }
+
   // Capacity: only "Yes" responses count toward the limit. No limit => unlimited.
   const hasLimit = event?.attendingLimit != null
   const attendingCount = event?.attendingCount ?? 0
@@ -42,6 +66,7 @@ function RSVPForm({ eventId, event, onRSVPSuccess, allowTimeProposal = false, in
       setSuccess(true)
       setName('')
       setStatus('Yes')
+      setDishes([''])
       // Only offer the calendar on a "Yes" (check rsvpData, not the state we just reset).
       if (rsvpData.status === 'Yes' && event?.eventDateTime) {
         setCalendarEvent(event)
@@ -80,7 +105,14 @@ function RSVPForm({ eventId, event, onRSVPSuccess, allowTimeProposal = false, in
       return
     }
 
-    await doSubmit({ name: name.trim(), status })
+    // Dishes only ride along on a "Yes" to a bring-a-dish event. Blanks are dropped.
+    const rsvpData = { name: name.trim(), status }
+    if (isBringADish && status === 'Yes') {
+      const cleanDishes = dishes.map(d => d.trim()).filter(Boolean)
+      if (cleanDishes.length > 0) rsvpData.dishes = cleanDishes
+    }
+
+    await doSubmit(rsvpData)
   }
 
   // Keep the response the user picked (No or Maybe) and attach the suggested time.
@@ -160,6 +192,42 @@ function RSVPForm({ eventId, event, onRSVPSuccess, allowTimeProposal = false, in
             </label>
           </div>
         </div>
+
+        {isBringADish && status === 'Yes' && (
+          <div className="form-group dishes-group">
+            <label className="radio-group-label">
+              What are you bringing? <span className="dishes-optional">(optional)</span>
+            </label>
+            {dishes.map((dish, index) => {
+              const isTrailingEmpty = index === dishes.length - 1 && dish.trim() === ''
+              return (
+                <div key={index} className="dish-row">
+                  <input
+                    type="text"
+                    className="dish-input"
+                    value={dish}
+                    maxLength={200}
+                    placeholder={index === 0 ? 'e.g. Potato salad' : 'Add another dish'}
+                    onChange={(e) => handleDishChange(index, e.target.value)}
+                  />
+                  {!isTrailingEmpty && (
+                    <button
+                      type="button"
+                      className="dish-remove-button"
+                      aria-label="Remove dish"
+                      onClick={() => handleRemoveDish(index)}
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+              )
+            })}
+            <p className="toggle-hint">
+              Start typing and another line appears. Leave blank if you're not bringing anything.
+            </p>
+          </div>
+        )}
 
         {error && <div className="error-message">{error}</div>}
         {success && <div className="success-message">RSVP submitted successfully!</div>}
