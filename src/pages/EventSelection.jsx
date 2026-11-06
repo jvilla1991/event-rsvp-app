@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getEvents } from '../services/api'
 import { formatEventDate } from '../utils/dateFormat'
+import { sortEventsForDisplay, isPastEvent } from '../utils/eventSort'
 
 function EventSelection() {
   const [events, setEvents] = useState([])
@@ -62,6 +63,8 @@ function EventSelection() {
     )
   }
 
+  const sortedEvents = sortEventsForDisplay(events)
+
   return (
     <div className="app">
       <header className="app-header event-selection-header">
@@ -100,8 +103,12 @@ function EventSelection() {
                   </tr>
                 </thead>
                 <tbody>
-                  {events.map((event) => (
-                    <tr key={event.id} onClick={() => handleEventSelect(event.id)}>
+                  {sortedEvents.map((event) => (
+                    <tr
+                      key={event.id}
+                      className={`event-selection-row${isPastEvent(event) ? ' event-selection-row--past' : ''}`}
+                      onClick={() => handleEventSelect(event.id)}
+                    >
                       <td className="event-table-title">{event.title || 'Untitled Event'}</td>
                       <td className="event-table-description">{event.description || '-'}</td>
                       <td className="event-table-date">
@@ -126,10 +133,10 @@ function EventSelection() {
             </div>
           ) : (
             <div className="event-selection-grid">
-              {events.map((event) => (
+              {sortedEvents.map((event) => (
                 <div
                   key={event.id}
-                  className="event-selection-card"
+                  className={`event-selection-card${isPastEvent(event) ? ' event-selection-card--past' : ''}`}
                   onClick={() => handleEventSelect(event.id)}
                 >
                   <h3 className="event-selection-title">{event.title || 'Untitled Event'}</h3>
