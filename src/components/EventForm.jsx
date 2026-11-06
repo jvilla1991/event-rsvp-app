@@ -9,6 +9,7 @@ function EventForm({ event, onSubmit, onCancel, loading }) {
   const [description, setDescription] = useState('')
   const [allowTimeProposal, setAllowTimeProposal] = useState(false)
   const [allowGuestPolls, setAllowGuestPolls] = useState(false)
+  const [isBringADish, setIsBringADish] = useState(false)
   const [attendingLimit, setAttendingLimit] = useState('')
   const [error, setError] = useState('')
   const [polls, setPolls] = useState([])
@@ -25,6 +26,7 @@ function EventForm({ event, onSubmit, onCancel, loading }) {
       setDescription(event.description || '')
       setAllowTimeProposal(event.allowTimeProposal ?? false)
       setAllowGuestPolls(event.allowGuestPolls ?? false)
+      setIsBringADish(event.isBringADish ?? false)
       setAttendingLimit(event.attendingLimit != null ? String(event.attendingLimit) : '')
       if (event.eventDateTime) {
         // Format datetime for input (YYYY-MM-DDTHH:mm)
@@ -49,6 +51,7 @@ function EventForm({ event, onSubmit, onCancel, loading }) {
       setDescription('')
       setAllowTimeProposal(false)
       setAllowGuestPolls(false)
+      setIsBringADish(false)
       setAttendingLimit('')
       setPolls([])
       setNewPolls([])
@@ -101,6 +104,7 @@ function EventForm({ event, onSubmit, onCancel, loading }) {
       eventDateTime: eventDateTime ? new Date(eventDateTime).toISOString() : null,
       allowTimeProposal,
       allowGuestPolls,
+      isBringADish,
       attendingLimit: parsedLimit,
     }
 
@@ -347,6 +351,25 @@ function EventForm({ event, onSubmit, onCancel, loading }) {
           </label>
           <p className="toggle-hint">
             When enabled, anyone viewing the event page can add their own poll. You can still delete any poll.
+          </p>
+        </div>
+
+        <div className="form-group">
+          <label className="toggle-label">
+            <input
+              type="checkbox"
+              checked={isBringADish}
+              onChange={(e) => setIsBringADish(e.target.checked)}
+              className="toggle-checkbox"
+              disabled={loading}
+            />
+            <span className="toggle-text">
+              Bring a dish (potluck)
+            </span>
+          </label>
+          <p className="toggle-hint">
+            When enabled, attendees who RSVP "Yes" are asked what dish(es) they're bringing,
+            and those appear on the attendee list.
           </p>
         </div>
 
