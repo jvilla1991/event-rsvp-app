@@ -2886,3 +2886,27 @@ body {
   color: var(--text-primary);
 }
 
+/* ── Past events: grayed out, still clickable ────────────────────────────── */
+.event-card--past,
+.event-selection-card--past,
+.event-selection-row--past {
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+/* Table rows don't take opacity consistently across browsers, so also mute the text. */
+.event-selection-row--past td {
+  color: var(--text-muted);
+}
+
+/* Keep past events obviously interactive — they brighten on hover, cursor stays a pointer. */
+.event-card--past:hover,
+.event-selection-card--past:hover,
+.event-selection-table tbody tr.event-selection-row--past:hover {
+  opacity: 0.85;
+}
+
+.event-selection-table tbody tr.event-selection-row--past:hover td {
+  color: var(--text-dark);
+}
+

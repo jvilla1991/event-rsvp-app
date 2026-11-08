@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getEvents } from '../services/api'
 import { formatEventDate } from '../utils/dateFormat'
+import { sortEventsForDisplay, isPastEvent } from '../utils/eventSort'
 
 function EventList({ onView, onEdit, onDelete, onInvites }) {
   const [events, setEvents] = useState([])
@@ -49,12 +50,17 @@ function EventList({ onView, onEdit, onDelete, onInvites }) {
     )
   }
 
+  const sortedEvents = sortEventsForDisplay(events)
+
   return (
     <div className="event-list-container">
       <h2>Events ({events.length})</h2>
       <div className="event-list">
-        {events.map((event) => (
-          <div key={event.id} className="event-card">
+        {sortedEvents.map((event) => (
+          <div
+            key={event.id}
+            className={`event-card${isPastEvent(event) ? ' event-card--past' : ''}`}
+          >
             <div className="event-card-content">
               <h3 className="event-card-title">{event.title || 'Untitled Event'}</h3>
               {event.description && (
